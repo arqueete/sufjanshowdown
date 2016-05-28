@@ -17,72 +17,106 @@
 			
 			$songs = db_query("SELECT `id` from `songs` WHERE active=1");*/
 			
-			$connection = db_connect();
-			$songs = mysqli_query($connection,"SELECT `id` from `songs` WHERE active=1");
-			
-			
-			$ids = array();
-			$row = mysqli_fetch_assoc($songs);
-			$ids = array();
-			while ($row = mysqli_fetch_assoc($songs)) 
-			{
-				$ids[] = $row[id];
-			}
-			print_r( array_values($ids));
-			$idscount = count($ids) - 1;
-			echo "<br />";
-			echo "idscount : " . $idscount;
-			$left = rand(0,$idscount);
-			echo "<br />";
-			echo "left : " . $left;
-			$leftsongid = $ids[$left];
-			echo "<br />";
-			echo "songid : " . $leftsongid;
-			
-			$leftsong = mysqli_query($mysqli, "SELECT `title` from `songs` WHERE id='$ids[$left]'" );
-			$leftsongrow = mysqli_fetch_assoc($leftsong);
-			$good = mysqli_num_rows($leftsong);
-			echo "<br />";
-			echo $good;
-			echo "<br />";
-			echo $leftsongrow[title];
-			/*$titles = array();
-			while ($leftsongrow = mysqli_fetch_assoc($leftsong)) 
-			{
-				$titles[] = $row[title];
-			}
-			echo "<br />";
-			print_r( array_values($titles));*/
-			/*$ids = array();
-			foreach ($rows as $key => $value) {
-				$ids[] = $value;
-			}*/
-			
-			/*foreach ($ids as $key => $value) {
-				echo $key;
-				echo ": ";
-				echo $value;
-				echo ", ";
-			}
-			echo "<br />";
-			$idscount = count($ids);
-			echo "idscount : " . $idscount;
-			echo "<br />";
-			print_r( array_values($ids));*/
-			/*$left = rand(1,$idscount);
-			echo "<br />";
-			echo "left : " . $left; 
-			echo "<br />";
-			echo gettype($left);
-			echo "<br />";
-			echo "id : " . $ids[0];*/
-			/*$leftsong = mysqli_query($mysqli, "SELECT title from songs WHERE id=". $ids[$left] );
-			$leftsongs = array();
-			while ($leftsongs = mysqli_fetch_assoc($leftsong)) {
-				$thissong[] = $leftsongs[0];
-			}
-			echo $thissong[0];*/
+			function db_query($query) {
+				// Connect to the database
+				$connection = db_connect();
 
+				// Query the database
+				$result = mysqli_query($connection,$query);
+
+				return $result;
+			}
+			
+			//$connection = db_connect();
+			//$songs = mysqli_query($connection,"SELECT `id` from `songs` WHERE active=1");
+			
+			/* Get IDs of all active songs */
+			function getSongs() {
+				$songs = db_query("SELECT `id` from `songs` WHERE active=1");
+
+				$ids = array();
+				$row = mysqli_fetch_assoc($songs);
+				$ids = array();
+				while ($row = mysqli_fetch_assoc($songs)) 
+				{
+					$ids[] = $row[id];
+				}
+				
+				return $ids;
+			}
+			
+			function getRandomSong($ids) {
+				$idscount = count($ids) - 1;
+				//echo "<br />";
+				//echo "idscount : " . $idscount;
+				$number = rand(0,$idscount);
+				$randomID = $ids[$number];
+				//echo "<br />";
+				//echo "songID: " . $randomID;
+				//echo "<br />";
+				
+				//get the title of the song at that ID
+				$song = db_query("SELECT `title` from `songs` WHERE id='$randomID'" );
+				$songInfo = mysqli_fetch_assoc($song);
+				//$songTitle = $songInfo;
+				
+				return $songInfo;
+			}
+			
+			$check = 0;
+			function getRandomSongs() {
+				$ids = getSongs();
+				$left = getRandomSong($ids);
+				$right = getRandomSong($ids);
+				if ($check < 3) {
+					if ($right[title] === $left[title]) {
+						echo "oops same song try again";
+						echo "<br />";
+						$check++;
+						getRandomSongs();
+						//getTheSongs($check);
+					} else {
+						echo "good to go";
+						echo "<br />";
+						echo $right[title];
+						echo "<br />";
+						echo $left[title];
+					}
+				} else {
+					echo "tried too many times";
+				}
+			}
+			
+			getRandomSongs();
+				
+				
+			
+			/*$check = 0;
+			function getTheSongs($check) {
+				$left = getRandomSong($ids);
+				echo "<br />";
+				echo $left;
+				echo "<br />";
+				$right = getRandomSong($ids);
+				echo "<br />";
+				echo $right;
+				echo "<br />";
+				if ($check > 3) {
+					if ($right === $left) {
+						echo "oops same song try again";
+						$check++;
+						//getTheSongs($check);
+					} else {
+						echo "good to go";
+					}
+				} else {
+					echo "tried too many times";
+				}
+			
+			}
+			
+			getTheSongs();*/
+			
 		?>
 	</body>
 </html>
