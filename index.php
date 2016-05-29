@@ -51,24 +51,25 @@
 		$right = getRandomSong($ids);
 		
 		$checkCounter = 0;
-		function checkSongs($left,$right,$checkCounter) {
-			echo "counter " . $checkCounter;
+		function checkSongs($left,$right,$checkCounter,$ids) {
+			//if the same song is randomly picked more than three times in a row, there's probably something wrong
 			if ($checkCounter < 3) {
 				if ($left[id] == $right[id]) {
-					echo "they're the same song";
-					echo "<br />";
+					//they're the same song, get a new right song
 					$checkCounter++;
 					$right = getRandomSong($ids);
-					checkSongs($left, $right);
+					checkSongs($left, $right, $checkCounter,$ids);
 				} else {
-					echo "<br />";
-					echo  "they're different songs";
-					echo "<br />";
+					//they're different songs
 				}
+			} else {
+				echo "Something went wrong.";
 			}
 			return $right;
 		}
-		$right = checkSongs($left,$right,$checkCounter);
+		$right = checkSongs($left,$right,$checkCounter,$ids);
+		echo "<br />";
+		echo $right;
 		$randomSongs = array();
 		$randomSongs[] = $left;
 		$randomSongs[] = $right;
