@@ -32,6 +32,8 @@
 				return $ids;
 			}
 			
+			//TO DO: check for duplicates
+			
 			function getRandomSong($ids) {
 				$idscount = count($ids) - 1;
 				//echo "<br />";
@@ -67,13 +69,21 @@
 			$left = $randomSongs[0];
 			$right = $randomSongs[1];
 			
-			echo $left[title];
-			echo "<br />";
-			echo $right[title];
+			//echo $left[title];
+			//echo "<br />";
+			//echo $right[title];
 			
 			//print_r array_values($randomSongs);
 			
 			
 		?>
+		
+		<form method="post" action="vote.php">
+			<fieldset>
+				<label><input type="radio" value="<?php echo $left[id]; ?>" name="song"><?php echo $left[title]; ?></label>
+				<label><input type="radio" value="<?php echo $right[id]; ?>" name="song"><?php echo $right[title]; ?></label>
+			</fieldset>
+			<input type="submit" name="vote" value="Vote"> 
+		</form>
 	</body>
 </html>
