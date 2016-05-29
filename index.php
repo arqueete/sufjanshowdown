@@ -45,15 +45,34 @@
 		return $songInfo;
 	}
 	
-	$check = 0;
 	function getRandomSongs() {
 		$ids = getSongs();
 		$left = getRandomSong($ids);
 		$right = getRandomSong($ids);
+		
+		$checkCounter = 0;
+		function checkSongs($left,$right,$checkCounter) {
+			echo "counter " . $checkCounter;
+			if ($checkCounter < 3) {
+				if ($left[id] == $right[id]) {
+					echo "they're the same song";
+					echo "<br />";
+					$checkCounter++;
+					$right = getRandomSong($ids);
+					checkSongs($left, $right);
+				} else {
+					echo "<br />";
+					echo  "they're different songs";
+					echo "<br />";
+				}
+			}
+			return $right;
+		}
+		$right = checkSongs($left,$right,$checkCounter);
 		$randomSongs = array();
 		$randomSongs[] = $left;
 		$randomSongs[] = $right;
-		
+
 		return $randomSongs;
 	}
 	
