@@ -28,15 +28,84 @@
 	
 	//do checks to make sure the game and vote are valid
 
+	$validGame = false;
 	//check that gameID is a game that exists
 	if (in_array($gameID,$ids)) {
-		//now check that song chosen is part of that game
+		
+		$validGame = true;
+		
+	} else {
+	
+		echo "Game error.";
+		
+	}
+	
+	if ($validGame == true) {
+		//get songs IDs for that game
 		$theseSongs = db_query("SELECT `left`,`right` FROM `games` where id=$gameID");
 		$theseSongsInfo = mysqli_fetch_assoc($theseSongs);
 
-		if (in_array($vote,$theseSongsInfo)) {
+	}
+	
+	//check that the voted song is a part of this game
+	$validSong = false;
+	
+	if (in_array($vote,$theseSongsInfo)) {
+	
+		$validSong = true;
+		
+	} else {
+		
+		echo "Song error.";
+		
+	}
+	
+	echo "<br />";
+
+	
+	if ($validSong == true) {
+		//array of songs in game and their winning status
+		$thisGameSongs = array();
+		
+		foreach ($theseSongsInfo as $key=>$value) {
+			$thisSong = array();
+			$thisSong[id] = $value;
+			if ($value == $vote) {
+				$thisSong[winning] = 1;
+			} else {
+				$thisSong[winning] = 0;
+			}
+			$thisSongInfo = db_query("SELECT * FROM songs WHERE id='$thisSong[id]'" );
+			$thisSongRow = mysqli_fetch_assoc($thisSongInfo);
+			$thisSong[title] = $thisSongRow[title];
+			$thisSong[rating] = $thisSongRow[rating];
+			$thisGameSongs[] = $thisSong;
+		}
+		
+		print_r(array_values($thisGameSongs));
+		
+		echo "<br />";
+		
+		//take song IDs and their winning status and do math to figure out their new rating
+		/*foreach ($thisGameSongs as $key=>$value) {
+		
+			$thisSongID = $value[id];
+			$thisSong = db_query("SELECT * FROM songs WHERE id='$thisSongID'" );
+			$thisSongInfo = mysqli_fetch_assoc($thisSong);
+			echo $thisSongInfo[title];
+			//echo $thisSongID;
+			echo "<br />";
+			$value[title] = $thisSongInfo[title];
+		}
+		
+		print_r(array_values($thisGameSongs));*/
+		
+		echo "<br />";
+	
+	}
+		
 			//song and game are valid
-			$song = db_query("SELECT * from songs WHERE id='$vote'" );
+			/*$song = db_query("SELECT * from songs WHERE id='$vote'" );
 			$songInfo = mysqli_fetch_assoc($song);
 			echo $songInfo[title];
 			echo "<br />";
@@ -57,7 +126,7 @@
 				}
 				echo "Score " . $score;
 				echo "<br />";
-			}
+			}*/
 			
 			$winnerSet = db_query("UPDATE `games` SET winner='$vote' WHERE id=$gameID");
 			
@@ -68,17 +137,9 @@
 			Player’s New Rating = Player’s Old Rating + (K-Value * (ScoringPt–Player’s Win Probability))*/
 			
 			
-		} else {
 		
-			echo "Song error.";
-			
-		}
 
-	} else {
 	
-		echo "Game error.";
-		
-	}
 	echo "<br />";
 
 	
