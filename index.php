@@ -1,10 +1,9 @@
 <?php 
 	include 'dbconnect.php';
 	
+	
 	function db_query($query) {
-		// Connect to the database
 		$connection = db_connect();
-
 		// Query the database
 		$result = mysqli_query($connection,$query);
 
@@ -62,9 +61,10 @@
 	echo "<br />";
 	$left = $randomSongs[0];
 	$right = $randomSongs[1];
-	$createGame = db_query("INSERT INTO `games` (`left`,`right`) VALUES ('$left[id]','$right[id]')");
-	//$gameID = mysqli_insert_id($connection);
-	//echo "gameID:" . $gameID;
+	$createGame = db_query("INSERT INTO `games` (`id`,`left`,`right`) VALUES ('','$left[id]','$right[id]')");
+	$connection = db_connect();
+	$gameID = mysqli_insert_id($connection);
+	echo "gameID:" . $gameID;
 	//echo $left[title];
 	//echo "<br />";
 	//echo $right[title];
@@ -85,7 +85,8 @@
 				<label><input type="radio" value="<?php echo $left[id]; ?>" name="song"><?php echo $left[title]; ?></label>
 				<label><input type="radio" value="<?php echo $right[id]; ?>" name="song"><?php echo $right[title]; ?></label>
 			</fieldset>
-			<input type="submit" name="vote" value="Vote"> 
+			<input type="hidden" name="gameID" value="<?php echo $gameID; ?>" />
+			<input type="submit" name="vote" value="Vote" /> 
 		</form>
 	</body>
 </html>
