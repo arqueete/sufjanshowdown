@@ -47,11 +47,16 @@
 				echo "<br />";
 				if ($value == $vote) {
 					echo "this is the winning song";
+					$score = 1;
 					echo "<br />";
 				} else {
 					echo "this is the losing song";
+					$losingSong = db_query("SELECT * from songs WHERE id='$value'" );
 					echo "<br />";
+					$score = 0;
 				}
+				echo "Score " . $score;
+				echo "<br />";
 			}
 			
 			$winnerSet = db_query("UPDATE `games` SET winner='$vote' WHERE id=$gameID");
