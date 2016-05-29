@@ -13,41 +13,55 @@
 
 		return $result;
 	}
+	
+	//get submitted values
 	$gameID = $_POST['gameID'];
 	$vote = $_POST['song'];
-	$thisGame = db_query("SELECT id FROM games");
+	
+	//get the ids of all games
+	$games = db_query("SELECT id FROM games");
 	$ids = array();
-	//$row = mysqli_fetch_assoc($thisGame);
-	$ids = array();
-	while ($row = mysqli_fetch_assoc($thisGame)) 
+	while ($row = mysqli_fetch_assoc($games)) 
 	{
 		$ids[] = $row[id];
 	}
-	//echo $gameID;
-	//echo "<br />";
-	if (in_array($gameID,$ids,$vote)) {
+	
+	//do checks to make sure the game and vote are valid
+
+	//check that gameID is a game that exists
+	if (in_array($gameID,$ids)) {
 		//now check that song chosen is part of that game
 		$theseSongs = db_query("SELECT `left`,`right` FROM `games` where id=$gameID");
 		$theseSongsInfo = mysqli_fetch_assoc($theseSongs);
-		//echo "<br />";
-		//print_r (array_values($theseSongsInfo));
+
 		if (in_array($vote,$theseSongsInfo)) {
 			//song and game are valid
+			$song = db_query("SELECT * from songs WHERE id='$vote'" );
+			$songInfo = mysqli_fetch_assoc($song);
+			echo $songInfo[title];
+			echo "<br />";
+			echo $songInfo[rating];
+			
+			$winnerSet = db_query("UPDATE `games` SET winner='$vote' WHERE id=$gameID");
+			
+		
+			
+			
 		} else {
-			echo "song error";
+		
+			echo "Song error.";
+			
 		}
-		//$row = mysqli_fetch_assoc($thisSong);
+
 	} else {
-		echo "something wrong";
+	
+		echo "Game error.";
+		
 	}
 	echo "<br />";
-	//print_r (array_values($ids));
+
 	
-	$song = db_query("SELECT * from songs WHERE id='$vote'" );
-	$songInfo = mysqli_fetch_assoc($song);
-	echo $songInfo[title];
-	echo "<br />";
-	echo $songInfo[rating];
+	
 ?>
 </body>
 </html>
