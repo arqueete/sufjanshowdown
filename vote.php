@@ -79,10 +79,48 @@
 			$thisSongRow = mysqli_fetch_assoc($thisSongInfo);
 			$thisSong[title] = $thisSongRow[title];
 			$thisSong[rating] = $thisSongRow[rating];
+			$thisSong[games] = $thisSongRow[games];
+			$thisSong[wins] = $thisSongRow[wins];
 			$thisGameSongs[] = $thisSong;
 		}
 		
-		print_r(array_values($thisGameSongs));
+		//time to do some math and figure out the new scores
+			
+			/*WinProbability = 1/(10^(( Opponent’s Current Rating–Player’s Current Rating)/400) + 1)
+			ScoringPt = 1 point if they win the match, 0 if they lose, and 0.5 for a draw.
+			Player’s New Rating = Player’s Old Rating + (K-Value * (ScoringPt–Player’s Win Probability))*/
+		
+		function updateSong($player,$opponent) {
+			$playerID = $player[id];
+			$winProbability = 1 / (10 ** (($opponent[rating] - $player[rating])/400) + 1);
+			$point = $player[winning];
+			$newRating = $player[rating] + (20 * ($point - $winProbability));
+			echo "<br />";
+			echo $player[title];
+			echo "<br />";
+			echo $player[id];
+			echo "<br />";
+			echo $newRating;
+			echo "<br />";
+			
+			$newGames = $player[games] + 1;
+			if ($player[winning] == 1) {
+				$newWins = $player[wins] + 1;
+			} else {
+				$newWins = $player[wins];
+			}
+			echo "games: " . $newGames;
+			echo "<br />";
+			echo "wins: " . $newWins;
+			$updateSongRating = db_query("UPDATE `songs` SET games='$newGames',wins='$newWins',rating='$newRating' WHERE id=$playerID");
+			echo "<br />";
+			
+		}
+		
+		updateSong($thisGameSongs[0],$thisGameSongs[1]);
+		updateSong($thisGameSongs[1],$thisGameSongs[0]);
+		
+		//print_r(array_values($thisGameSongs));
 		
 		echo "<br />";
 		
@@ -101,49 +139,13 @@
 		print_r(array_values($thisGameSongs));*/
 		
 		echo "<br />";
+		
+		$deleteGame = db_query("DELETE FROM `games` WHERE id=$gameID");
+			echo "<br />";
+			echo $deleteGame;
 	
 	}
-		
-			//song and game are valid
-			/*$song = db_query("SELECT * from songs WHERE id='$vote'" );
-			$songInfo = mysqli_fetch_assoc($song);
-			echo $songInfo[title];
-			echo "<br />";
-			echo $songInfo[rating];
-			echo "<br />";
-			foreach ($theseSongsInfo as $key=>$value) {
-				echo $value;
-				echo "<br />";
-				if ($value == $vote) {
-					echo "this is the winning song";
-					$score = 1;
-					echo "<br />";
-				} else {
-					echo "this is the losing song";
-					$losingSong = db_query("SELECT * from songs WHERE id='$value'" );
-					echo "<br />";
-					$score = 0;
-				}
-				echo "Score " . $score;
-				echo "<br />";
-			}*/
-			
-			$winnerSet = db_query("UPDATE `games` SET winner='$vote' WHERE id=$gameID");
-			
-			//time to do some math and figure out the new scores
-			
-			/*WinProbability = 1/(10^(( Opponent’s Current Rating–Player’s Current Rating)/400) + 1)
-			ScoringPt = 1 point if they win the match, 0 if they lose, and 0.5 for a draw.
-			Player’s New Rating = Player’s Old Rating + (K-Value * (ScoringPt–Player’s Win Probability))*/
-			
-			
-		
 
-	
-	echo "<br />";
-
-	
-	
 ?>
 </body>
 </html>
