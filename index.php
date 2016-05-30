@@ -127,6 +127,10 @@
 				?>
 				</label>
 				<br />
+				<label>
+					<input type="radio" name="song" value="skip" /> Skip this game
+				</label>
+				<br />
 				<label><input type="radio" value="<?php echo $right[id]; ?>" name="song">"<?php echo $right[title]; ?>" from <?php echo $rightAlbumInfo[name]; ?> (<?php echo $rightAlbumInfo[year]; ?>)<br />
 				<?php
 					if ($rightAlbumInfo[boxset]) {
