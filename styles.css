@@ -1,0 +1,29 @@
+.voting {
+	border: none;
+}
+
+.game {
+	display: block;
+}
+
+.game__song {
+	display: block;
+	font-size: 1.1em;
+}
+
+.game__from {
+	display: inline-block;
+	font-size: .9em;
+}
+
+.game__album {
+	display: inline-block;
+}
+
+.game__input {
+	display: none;
+}
+
+.game__input:checked + .game {
+	background-color: #eee;
+}
