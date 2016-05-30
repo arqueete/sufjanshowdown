@@ -1,13 +1,127 @@
 <?php 
 	include 'dbconnect.php';
-	
-	
+
 	function db_query($query) {
 		$connection = db_connect();
 		// Query the database
 		$result = mysqli_query($connection,$query);
 
 		return $result;
+	}
+	
+	//If they're coming from submitting a vote, process that
+	if (!empty($_POST)) {
+	
+		//get submitted values
+		$gameID = $_POST['gameID'];
+		$vote = $_POST['song'];
+		
+		$error = false;
+		
+
+		//get the ids of all games
+		$games = db_query("SELECT id FROM games");
+		$ids = array();
+		while ($row = mysqli_fetch_assoc($games)) 
+		{
+			$ids[] = $row[id];
+		}
+		
+		//do checks to make sure the game and vote are valid
+
+		$validGame = false;
+		//check that gameID is a game that exists
+		if (in_array($gameID,$ids)) {
+			
+			$validGame = true;
+			
+		} else {
+		
+			$error = true;
+			
+		}
+		
+		if ($validGame == true && $vote == 'skip') {
+		
+			//If they didn't vote, just delete the game
+			$deleteGame = db_query("DELETE FROM `games` WHERE id=$gameID");
+			//echo "Game skipped";
+		
+		
+		} else {
+		
+			if ($validGame == true) {
+				//get songs IDs for that game
+				$theseSongs = db_query("SELECT `left`,`right` FROM `games` where id=$gameID");
+				$theseSongsInfo = mysqli_fetch_assoc($theseSongs);
+
+			}
+			
+			//check that the voted song is a part of this game
+			$validSong = false;
+			
+			if (in_array($vote,$theseSongsInfo)) {
+			
+				$validSong = true;
+				
+			} else {
+				
+				$error = true;
+				
+			}
+
+
+			
+			if ($validSong == true) {
+				//array of songs in game and their winning status
+				$thisGameSongs = array();
+				
+				foreach ($theseSongsInfo as $key=>$value) {
+					$thisSong = array();
+					$thisSong[id] = $value;
+					if ($value == $vote) {
+						$thisSong[winning] = 1;
+					} else {
+						$thisSong[winning] = 0;
+					}
+					$thisSongInfo = db_query("SELECT * FROM songs WHERE id='$thisSong[id]'" );
+					$thisSongRow = mysqli_fetch_assoc($thisSongInfo);
+					$thisSong[title] = $thisSongRow[title];
+					$thisSong[rating] = $thisSongRow[rating];
+					$thisSong[games] = $thisSongRow[games];
+					$thisSong[wins] = $thisSongRow[wins];
+					$thisGameSongs[] = $thisSong;
+				}
+				
+				//time to do some math and figure out the new scores
+				
+				function updateSong($player,$opponent) {
+					$playerID = $player[id];
+					$winProbability = 1 / (10 ** (($opponent[rating] - $player[rating])/400) + 1);
+					$point = $player[winning];
+					$newRating = $player[rating] + (20 * ($point - $winProbability));
+					
+					$newGames = $player[games] + 1;
+					if ($player[winning] == 1) {
+						$newWins = $player[wins] + 1;
+					} else {
+						$newWins = $player[wins];
+					}
+
+					$updateSongRating = db_query("UPDATE `songs` SET games='$newGames',wins='$newWins',rating='$newRating' WHERE id=$playerID");
+
+					
+				}
+				
+				updateSong($thisGameSongs[0],$thisGameSongs[1]);
+				updateSong($thisGameSongs[1],$thisGameSongs[0]);
+
+				
+				$deleteGame = db_query("DELETE FROM `games` WHERE id=$gameID");
+
+			}
+		}
+	
 	}
 
 	/* Get IDs of all active songs */
@@ -101,71 +215,120 @@
 		<title>Sufjan Showdown</title>
 		<meta charset="utf-8">
         <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <title></title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+		<link href='https://fonts.googleapis.com/css?family=Roboto:900' rel='stylesheet' type='text/css'>
 		<link rel="stylesheet" href="normalize.css" />
 		<link rel="stylesheet" href="styles.css" />
 	</head>
 	<body>
-		<form method="post" action="vote.php">
-			<fieldset class="voting">
-				<input type="radio" value="<?php echo $left[id]; ?>" name="song" class="game__input" id="left" />
-				<label class="game" for="left"><span class="game__song">"<?php echo $left[title]; ?>"</span> <span class="game__from">from</a> <span class="game__album"><?php echo $leftAlbumInfo[name]; ?> <span class="game__year">(<?php echo $leftAlbumInfo[year]; ?>)</span></span>
-				<br />
-				<?php
-					if ($leftAlbumInfo[boxset]) {
-						echo "<span class='game__boxset'>" . $leftAlbumInfo[boxset] . "</span>";
-					}
-				?>
-				<?php
-					if ($left[url] && $leftAlbumInfo[url]) {
-						echo "<iframe style='border: 0; width: 100%; height: 42px;' src='http://bandcamp.com/EmbeddedPlayer/album=". $leftAlbumInfo[url] ."/size=small/bgcol=ffffff/linkcol=333333/track=" . $left[url] . "/transparent=true/' seamless><a href='http://music.sufjan.com/album/carrie-lowell'>" . $left[title] . "by Sufjan Stevens</a></iframe>"; 
-					} else if ($right[url] && $rightAlbumInfo[url] == 0) {
-						echo "<iframe style='border: 0; width: 100%; height: 42px;' src='http://bandcamp.com/EmbeddedPlayer/track=". $right[url] ."/size=small/bgcol=ffffff/linkcol=0687f5/transparent=true/' seamless><a href='http://music.sufjan.com/album/carrie-lowell'>" . $right[title] . "by Sufjan Stevens</a></iframe>";
-					};
-				?>
+		<div class="copy">
+			<div class="copy__inner">
+				<h1>Sufjan Showdown</h1>
+				<span class="subtitle">(Or, Consider a New Way of Voting On Favorite Songs!)</span>
+				<p>We'll show you two songs by indie artist Sufjan Stevens. You pick which one you like better. Together, we'll determine the most beloved songs from the singer-songwriter's catalog.</p>
+			</div>
+		</div>
+		<?php if (!empty($_POST)) { ?>
+			<div class="message">
 				<?php 
-					if ($left[comment]) {
-						echo "<span class='game__comment'>" . $left[comment] . "</span>";
+					if ($error == true) {
+						echo "<p>Oops! There was a problem processing your last vote.</p>";
 					} else {
-						echo "<span class='game__comment'>" . $leftAlbumInfo[comment] . "</span>";
+						if ($vote == 'skip') {
+							echo "<p>Last matchup was skipped.</p>";
+						} else {
+							echo "<p>Your vote was successfully cast!</p>";
+						}
 					}
 				?>
-				</label>
-				<br />
+			</div>
+		<?php } ?>
+		<form method="post" action="index.php">
+			<div class="voting">
+				<div class="voting__inner">
+					<input type="radio" value="<?php echo $left[id]; ?>" name="song" class="game__input" id="left" />
+					<label class="game" for="left">
+						<span class="game__song" title="<?php echo $left[title]; ?>">"<?php echo $left[title]; ?>"</span> 
+						<span class="game__from">from</span> 
+						<span class="game__album"><?php echo $leftAlbumInfo[name]; ?> 
+							<span class="game__year">(<?php echo $leftAlbumInfo[year]; ?>)</span>
+						</span>
+						<?php
+							if ($leftAlbumInfo[boxset]) {
+								echo "<span class='game__boxset'>" . $leftAlbumInfo[boxset] . "</span>";
+							}
+						?>
+						<div class="game__embed">
+						<?php
+							if ($left[url] && $leftAlbumInfo[url]) {
+								echo "<iframe style='border: 0; width: 100%; height: 42px;' src='http://bandcamp.com/EmbeddedPlayer/album=". $leftAlbumInfo[url] ."/size=small/bgcol=ffffff/linkcol=333333/track=" . $left[url] . "/transparent=true/' seamless><a href='http://music.sufjan.com/album/carrie-lowell'>" . $left[title] . "by Sufjan Stevens</a></iframe>"; 
+							} else if ($right[url] && $rightAlbumInfo[url] == 0) {
+								echo "<iframe style='border: 0; width: 100%; height: 42px;' src='http://bandcamp.com/EmbeddedPlayer/track=". $right[url] ."/size=small/bgcol=ffffff/linkcol=0687f5/transparent=true/' seamless><a href='http://music.sufjan.com/album/carrie-lowell'>" . $right[title] . "by Sufjan Stevens</a></iframe>";
+							} else {
+								echo "Song embed not available.";
+							};
+						?>
+						</div>
+						<?php 
+							if ($left[comment]) {
+								echo "<span class='game__comment'>" . $left[comment] . "</span>";
+							} else {
+								echo "<span class='game__comment'>" . $leftAlbumInfo[comment] . "</span>";
+							}
+						?>
+						<span class="game__select">Pick me!</button>
+					</label>
+					
+					<span class="vs">VS.</span>
+					
+					<input type="radio" value="<?php echo $right[id]; ?>" name="song" class="game__input" id="right">
+					<label class="game" for="right">
+						<span class="game__song" title="<?php echo $right[title]; ?>">"<?php echo $right[title]; ?>"</span> 
+						<span class="game__from">from</span> 
+						<span class="game__album"><?php echo $rightAlbumInfo[name]; ?> 
+							<span class="game__year">(<?php echo $rightAlbumInfo[year]; ?>)</span>
+						</span>
+						<?php
+							if ($rightAlbumInfo[boxset]) {
+								echo "<span class='game__boxset'>" . $rightAlbumInfo[boxset] . "</span>";
+							}
+						?>
+						<div class="game__embed">
+						<?php
+							if ($right[url] && $rightAlbumInfo[url] > 0) {
+								echo "<iframe style='border: 0; width: 100%; height: 42px;' src='http://bandcamp.com/EmbeddedPlayer/album=". $rightAlbumInfo[url] ."/size=small/bgcol=ffffff/linkcol=333333/track=" . $right[url] . "/transparent=true/' seamless><a href='http://music.sufjan.com/album/carrie-lowell'>" . $right[title] . "by Sufjan Stevens</a></iframe>";
+							} else if ($right[url] && $rightAlbumInfo[url] == 0) {
+								echo "<iframe style='border: 0; width: 100%; height: 42px;' src='http://bandcamp.com/EmbeddedPlayer/track=". $right[url] ."/size=small/bgcol=ffffff/linkcol=0687f5/transparent=true/' seamless><a href='http://music.sufjan.com/album/carrie-lowell'>" . $right[title] . "by Sufjan Stevens</a></iframe>";
+							} else {
+								echo "Song embed not available.";
+							};
+						?>
+						</div>
+						<?php 
+							if ($right[comment]) {
+								echo "<span class='game__comment'>" . $right[comment] . "</span>";
+							} else {
+								echo "<span class='game__comment'>" . $rightAlbumInfo[comment] . "</span>";
+							}
+						?>
+						<span class="game__select">Pick me!</button>
+					</label>
+					</div>
+				
 				<input type="radio" name="song" value="skip" id="skip" class="game__input" />
 				<label class="game game--skip" for="skip">
-					 Skip this game
+					 <span class="game__select">Skip this matchup</button>
 				</label>
-				<br />
-				<input type="radio" value="<?php echo $right[id]; ?>" name="song" class="game__input" id="right">
-				<label class="game" for="right">
-				<span class="game__song">"<?php echo $right[title]; ?>"</span> <span class="game__from">from</span> <span class="game__album"><?php echo $rightAlbumInfo[name]; ?> <span class="game__year">(<?php echo $rightAlbumInfo[year]; ?>)</span></span>
-				<?php
-					if ($rightAlbumInfo[boxset]) {
-						echo "<span class='game__boxset'>" . $rightAlbumInfo[boxset] . "</span>";
-					}
-				?>
-				
-				<?php
-					if ($right[url] && $rightAlbumInfo[url] > 0) {
-						echo "<iframe style='border: 0; width: 100%; height: 42px;' src='http://bandcamp.com/EmbeddedPlayer/album=". $rightAlbumInfo[url] ."/size=small/bgcol=ffffff/linkcol=333333/track=" . $right[url] . "/transparent=true/' seamless><a href='http://music.sufjan.com/album/carrie-lowell'>" . $right[title] . "by Sufjan Stevens</a></iframe>";
-					} else if ($right[url] && $rightAlbumInfo[url] == 0) {
-						echo "<iframe style='border: 0; width: 100%; height: 42px;' src='http://bandcamp.com/EmbeddedPlayer/track=". $right[url] ."/size=small/bgcol=ffffff/linkcol=0687f5/transparent=true/' seamless><a href='http://music.sufjan.com/album/carrie-lowell'>" . $right[title] . "by Sufjan Stevens</a></iframe>";
-					};
-				?>
-				<?php 
-					if ($right[comment]) {
-						echo "<span class='game__comment'>" . $right[comment] . "</span>";
-					} else {
-						echo "<span class='game__comment'>" . $rightAlbumInfo[comment] . "</span>";
-					}
-				?>
-				</label>
-			</fieldset>
-			<input type="hidden" name="gameID" value="<?php echo $gameID; ?>" />
-			<input type="submit" name="vote" value="Vote" class="voting__submit" /> 
+			
+				<input type="hidden" name="gameID" value="<?php echo $gameID; ?>" />
+				<input type="submit" name="vote" value="Vote" class="voting__submit" />
+			</div>
 		</form>
+		<footer class="copy">
+			<div class="copy__inner">
+				<a href="mailto:jessica@jessicagleason.com">Report a problem</a>
+			</div>
+		</footer>
 	</body>
 </html>
