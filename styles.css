@@ -14,7 +14,7 @@ body {
 }
 
 h1 {
-	font-size: 3em;
+	font-size: 2.5em;
 	text-align: center;
 	color: #587C12;
 	text-shadow: 1px 1px #1F160C;
@@ -54,6 +54,10 @@ a:visited {
 	padding: 1em;
 }
 
+.copy__links {
+	text-align: right;
+}
+
 .message {
 	width: 100%;
 	padding: 10px;
@@ -68,7 +72,7 @@ a:visited {
 	padding: 20px 0;
 }
 
-.voting__submit {
+.voting__submit, .voting__leaderboard {
 	font-family: 'Roboto', sans-serif;
 	font-size: 1.5em;
 	display: block;
@@ -79,6 +83,17 @@ a:visited {
 	border-radius: 5px;
 	margin: 20px auto;
 	padding: 5px;
+}
+
+.voting__leaderboard {
+	width: 200px;
+	font-size: 1em;
+	text-align: center;
+}
+
+.voting__leaderboard:link, .voting__leaderboard:visited {
+	color: #fff;
+	text-decoration: none;
 }
 
 .vs {
@@ -193,7 +208,34 @@ a:visited {
 	border-bottom-left-radius: 5px;
 }
 
+.leaderboard {
+	width: 100%;
+	text-align: left;
+}
+
+.leaderboard thead {
+	background-color: #3B240C;
+	color: #fff;
+}
+
+.leaderboard th {
+	padding: 10px;
+}
+
+.leaderboard__cell {
+	padding: 10px;
+	margin: 5px;
+	background-color: #fff;
+}
+
+.leaderboard  tr:nth-child(odd) .leaderboard__cell{
+	background-color: #eee;
+}
+
 @media screen and (min-width: 768px) {
+	h1 {
+		font-size: 3.5em;
+	}
 	.copy {
 		text-align: left;
 	}

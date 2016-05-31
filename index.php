@@ -226,7 +226,7 @@
 			<div class="copy__inner">
 				<h1>Sufjan Showdown</h1>
 				<span class="subtitle">(Or, Consider a New Way of Voting On Favorite Songs!)</span>
-				<p>We'll show you two songs by indie artist Sufjan Stevens. You pick which one you like better. Together, we'll determine the most beloved songs from the singer-songwriter's catalog.</p>
+				<p>We'll show you two songs by indie artist Sufjan Stevens. You pick which one you like better. Together, we'll determine the most beloved songs in the singer-songwriter's catalog.</p>
 			</div>
 		</div>
 		<?php if (!empty($_POST)) { ?>
@@ -251,8 +251,16 @@
 					<label class="game" for="left">
 						<span class="game__song" title="<?php echo $left[title]; ?>">"<?php echo $left[title]; ?>"</span> 
 						<span class="game__from">from</span> 
-						<span class="game__album"><?php echo $leftAlbumInfo[name]; ?> 
-							<span class="game__year">(<?php echo $leftAlbumInfo[year]; ?>)</span>
+						<span class="game__album">
+							<?php if ($leftAlbumInfo[bandcamp]) { ?>
+							<a href="<?php echo $leftAlbumInfo[bandcamp]; ?>" target="_blank">
+							<?php } ?>
+								<?php echo $leftAlbumInfo[name]; ?>
+							<?php if ($leftAlbumInfo[bandcamp]) { ?>
+							</a> 
+							<?php } ?>
+							<?php ?>
+							<span class="game__year"> (<?php echo $leftAlbumInfo[year]; ?>)</span>
 						</span>
 						<?php
 							if ($leftAlbumInfo[boxset]) {
@@ -286,8 +294,17 @@
 					<label class="game" for="right">
 						<span class="game__song" title="<?php echo $right[title]; ?>">"<?php echo $right[title]; ?>"</span> 
 						<span class="game__from">from</span> 
-						<span class="game__album"><?php echo $rightAlbumInfo[name]; ?> 
-							<span class="game__year">(<?php echo $rightAlbumInfo[year]; ?>)</span>
+						<span class="game__album">
+							<?php if ($rightAlbumInfo[bandcamp]) { ?>
+								<a href="<?php echo $rightAlbumInfo[bandcamp]; ?>" target="_blank">
+							<?php } ?>
+								<?php echo $rightAlbumInfo[name]; ?>
+							<?php if ($rightAlbumInfo[bandcamp]) { ?>
+							</a> 
+							<?php } ?>
+							<?php ?>
+						
+							<span class="game__year"> (<?php echo $rightAlbumInfo[year]; ?>)</span>
 						</span>
 						<?php
 							if ($rightAlbumInfo[boxset]) {
@@ -323,11 +340,14 @@
 			
 				<input type="hidden" name="gameID" value="<?php echo $gameID; ?>" />
 				<input type="submit" name="vote" value="Vote" class="voting__submit" />
+				<a href="leaderboard.php" class="voting__leaderboard">View the Leaderboard</a>
 			</div>
 		</form>
 		<footer class="copy">
 			<div class="copy__inner">
-				<a href="mailto:jessica@jessicagleason.com">Report a problem</a>
+				<nav class="copy__links">
+					<a href="mailto:jessica@jessicagleason.com" class="copy__link">Report a problem</a>
+				</nav>
 			</div>
 		</footer>
 	</body>
