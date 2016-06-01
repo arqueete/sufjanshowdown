@@ -216,7 +216,7 @@
 		<title>Sufjan Showdown</title>
 		<meta charset="utf-8">
         <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <meta name="description" content="">
+        <meta name="description" content="Vote to help determine the most-loved Sufjan Stevens songs.">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 		<link href='https://fonts.googleapis.com/css?family=Roboto:900' rel='stylesheet' type='text/css'>
 		<link rel="stylesheet" href="normalize.css" />
@@ -359,6 +359,16 @@
 				</nav>
 			</div>
 		</footer>
+		<script>
+		  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+		  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+		  ga('create', 'UA-78646106-2', 'auto');
+		  ga('send', 'pageview');
+
+		</script>
 		<script>
 			(function() {
 				var submitButton = document.getElementById('vote');
