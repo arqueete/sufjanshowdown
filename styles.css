@@ -20,6 +20,7 @@ h1 {
 	text-shadow: 1px 1px #1F160C;
 	text-transform: uppercase;
 	margin-bottom: 0;
+	margin-top: 0;
 }
 
 h1, h2 {
@@ -32,6 +33,10 @@ a:link {
 
 a:visited {
 	color: #48650F;
+}
+
+.hidden {
+	display: none !important;
 }
 
 .subtitle {
@@ -94,6 +99,16 @@ a:visited {
 .voting__leaderboard:link, .voting__leaderboard:visited {
 	color: #fff;
 	text-decoration: none;
+}
+
+#validation {
+	display: block;
+	width: 200px;
+	margin: 0 auto;
+	padding: 5px;
+	background-color: #3B240C;
+	color: #fff;
+	text-align: center;
 }
 
 .vs {
@@ -238,9 +253,6 @@ a:visited {
 	}
 	.copy {
 		text-align: left;
-	}
-	.voting {
-		padding: 50px 0;
 	}
 	.voting__inner {
 		text-align: center;

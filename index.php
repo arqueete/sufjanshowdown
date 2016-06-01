@@ -3,7 +3,6 @@
 
 	function db_query($query) {
 		$connection = db_connect();
-		// Query the database
 		$result = mysqli_query($connection,$query);
 
 		return $result;
@@ -123,8 +122,10 @@
 		}
 	
 	}
+	
+	$criticalError = false;
 
-	/* Get IDs of all active songs */
+	//Get IDs of all active songs
 	function getSongs() {
 		$songs = db_query("SELECT id FROM songs WHERE active=1");
 
@@ -138,23 +139,18 @@
 		
 		return $ids;
 	}
-	
-	//TO DO: check for duplicates
+
 	
 	function getRandomSong($ids) {
 		$idscount = count($ids) - 1;
-		//echo "<br />";
-		//echo "idscount : " . $idscount;
+
 		$number = rand(0,$idscount);
 		$randomID = $ids[$number];
-		//echo "<br />";
-		//echo "songID: " . $randomID;
-		//echo "<br />";
+
 		
 		//get the title of the song at that ID
 		$song = db_query("SELECT * FROM songs WHERE id='$randomID'" );
 		$songInfo = mysqli_fetch_assoc($song);
-		//$songTitle = $songInfo;
 		
 		return $songInfo;
 	}
@@ -167,7 +163,6 @@
 		$checkCounter = 0;
 		function checkSongs($left,$right,$checkCounter,$ids) {
 			//if the same song is randomly picked more than three times in a row, there's probably something wrong
-			//echo $left[id] . " vs " . $right[id];
 			if ($checkCounter < 3) {
 				if ($left[id] == $right[id]) {
 					//they're the same song, get a new right song
@@ -178,34 +173,40 @@
 					//they're different songs
 				}
 			} else {
-				echo "Something went wrong.";
+				$right = null;
 			}
 			return $right;
 		}
 		$right = checkSongs($left,$right,$checkCounter,$ids);
-		$randomSongs = array();
-		$randomSongs[] = $left;
-		$randomSongs[] = $right;
+		if ($right == null) {
+			$randomSongs = null;
+		} else {
+			$randomSongs = array();
+			$randomSongs[] = $left;
+			$randomSongs[] = $right;
+		}
 
 		return $randomSongs;
 	}
 	
 	$randomSongs = getRandomSongs();
-	$left = $randomSongs[0];
-	$right = $randomSongs[1];
-	$createGame = db_query("INSERT INTO `games` (`id`,`left`,`right`) VALUES ('','$left[id]','$right[id]')");
-	$connection = db_connect();
-	$gameID = mysqli_insert_id($connection);
-	//echo "gameID:" . $gameID;
-	
-	function getAlbum($albumID) {
-		$album = db_query("SELECT * FROM `albums` WHERE id='$albumID'" );
-		$albumInfo = mysqli_fetch_assoc($album);
-		return $albumInfo;
-	}
+	if ($randomSongs) {
+		$left = $randomSongs[0];
+		$right = $randomSongs[1];
+		$createGame = db_query("INSERT INTO `games` (`id`,`left`,`right`) VALUES ('','$left[id]','$right[id]')");
+		$connection = db_connect();
+		$gameID = mysqli_insert_id($connection);
+		
+		function getAlbum($albumID) {
+			$album = db_query("SELECT * FROM `albums` WHERE id='$albumID'" );
+			$albumInfo = mysqli_fetch_assoc($album);
+			return $albumInfo;
+		}
 
-	$leftAlbumInfo = getAlbum($left[album]);
-	$rightAlbumInfo = getAlbum($right[album]);
+		$leftAlbumInfo = getAlbum($left[album]);
+		$rightAlbumInfo = getAlbum($right[album]);
+	
+	}
 
 ?>
 
@@ -229,11 +230,13 @@
 				<p>We'll show you two songs by indie artist Sufjan Stevens. You pick which one you like better. Together, we'll determine the most beloved songs in the singer-songwriter's catalog.</p>
 			</div>
 		</div>
-		<?php if (!empty($_POST)) { ?>
+		<?php if (!empty($_POST) || $randomSongs == null) { ?>
 			<div class="message">
 				<?php 
 					if ($error == true) {
 						echo "<p>Oops! There was a problem processing your last vote.</p>";
+					} else if ($randomSongs == null) {
+						echo "<p>Oops! There was a problem generating a song matchup.</p>";
 					} else {
 						if ($vote == 'skip') {
 							echo "<p>Last matchup was skipped.</p>";
@@ -241,12 +244,15 @@
 							echo "<p>Your vote was successfully cast!</p>";
 						}
 					}
+					
 				?>
 			</div>
 		<?php } ?>
 		<form method="post" action="index.php">
 			<div class="voting">
 				<div class="voting__inner">
+					<!-- CHECK FOR VALID GENERATION -->
+					<?php if ($randomSongs) { ?>
 					<input type="radio" value="<?php echo $left[id]; ?>" name="song" class="game__input" id="left" />
 					<label class="game" for="left">
 						<span class="game__song" title="<?php echo $left[title]; ?>">"<?php echo $left[title]; ?>"</span> 
@@ -270,9 +276,9 @@
 						<div class="game__embed">
 						<?php
 							if ($left[url] && $leftAlbumInfo[url]) {
-								echo "<iframe style='border: 0; width: 100%; height: 42px;' src='http://bandcamp.com/EmbeddedPlayer/album=". $leftAlbumInfo[url] ."/size=small/bgcol=ffffff/linkcol=333333/track=" . $left[url] . "/transparent=true/' seamless><a href='http://music.sufjan.com/album/carrie-lowell'>" . $left[title] . "by Sufjan Stevens</a></iframe>"; 
-							} else if ($right[url] && $rightAlbumInfo[url] == 0) {
-								echo "<iframe style='border: 0; width: 100%; height: 42px;' src='http://bandcamp.com/EmbeddedPlayer/track=". $right[url] ."/size=small/bgcol=ffffff/linkcol=0687f5/transparent=true/' seamless><a href='http://music.sufjan.com/album/carrie-lowell'>" . $right[title] . "by Sufjan Stevens</a></iframe>";
+								echo "<iframe style='border: 0; width: 100%; height: 42px;' src='http://bandcamp.com/EmbeddedPlayer/album=". $leftAlbumInfo[url] ."/size=small/bgcol=ffffff/linkcol=333333/track=" . $left[url] . "/transparent=true/' seamless><a href='". $leftAlbumInfo[bandcamp] ."'>" . $left[title] . "by Sufjan Stevens</a></iframe>"; 
+							} else if ($left[url] && $leftAlbumInfo[url] == 0) {
+								echo "<iframe style='border: 0; width: 100%; height: 42px;' src='http://bandcamp.com/EmbeddedPlayer/track=". $left[url] ."/size=small/bgcol=ffffff/linkcol=333333/transparent=true/' seamless><a href='". $leftAlbumInfo[bandcamp] ."'>" . $left[title] . "by Sufjan Stevens</a></iframe>";
 							} else {
 								echo "Song embed not available.";
 							};
@@ -313,10 +319,10 @@
 						?>
 						<div class="game__embed">
 						<?php
-							if ($right[url] && $rightAlbumInfo[url] > 0) {
-								echo "<iframe style='border: 0; width: 100%; height: 42px;' src='http://bandcamp.com/EmbeddedPlayer/album=". $rightAlbumInfo[url] ."/size=small/bgcol=ffffff/linkcol=333333/track=" . $right[url] . "/transparent=true/' seamless><a href='http://music.sufjan.com/album/carrie-lowell'>" . $right[title] . "by Sufjan Stevens</a></iframe>";
+							if ($right[url] && $rightAlbumInfo[url]) {
+								echo "<iframe style='border: 0; width: 100%; height: 42px;' src='http://bandcamp.com/EmbeddedPlayer/album=". $rightAlbumInfo[url] ."/size=small/bgcol=ffffff/linkcol=333333/track=" . $right[url] . "/transparent=true/' seamless><a href='". $rightAlbumInfo[bandcamp] ."'>" . $right[title] . "by Sufjan Stevens</a></iframe>"; 
 							} else if ($right[url] && $rightAlbumInfo[url] == 0) {
-								echo "<iframe style='border: 0; width: 100%; height: 42px;' src='http://bandcamp.com/EmbeddedPlayer/track=". $right[url] ."/size=small/bgcol=ffffff/linkcol=0687f5/transparent=true/' seamless><a href='http://music.sufjan.com/album/carrie-lowell'>" . $right[title] . "by Sufjan Stevens</a></iframe>";
+								echo "<iframe style='border: 0; width: 100%; height: 42px;' src='http://bandcamp.com/EmbeddedPlayer/track=". $right[url] ."/size=small/bgcol=ffffff/linkcol=333333/transparent=true/' seamless><a href='". $rightAlbumInfo[bandcamp] ."'>" . $right[title] . "by Sufjan Stevens</a></iframe>";
 							} else {
 								echo "Song embed not available.";
 							};
@@ -339,7 +345,10 @@
 				</label>
 			
 				<input type="hidden" name="gameID" value="<?php echo $gameID; ?>" />
-				<input type="submit" name="vote" value="Vote" class="voting__submit" />
+				<input type="submit" name="vote" value="Vote" id="vote" class="voting__submit" />
+				<span id="validation" class="hidden">Please choose an option</span>
+				<?php } ?>
+				<!-- END CHECK -->
 				<a href="leaderboard.php" class="voting__leaderboard">View the Leaderboard</a>
 			</div>
 		</form>
@@ -350,5 +359,26 @@
 				</nav>
 			</div>
 		</footer>
+		<script>
+			(function() {
+				var submitButton = document.getElementById('vote');
+				var validation = document.getElementById('validation');
+				function checkVoting(event) {
+					var radios = document.getElementsByTagName('input');
+					var selectedItem = false;
+					for (var i = 0; i < radios.length; i++) {
+						if (radios[i].type === 'radio' && radios[i].checked) {
+							selectedItem = true;      
+						}
+					}
+					if (selectedItem) {
+					} else {
+						validation.className = "";
+						event.preventDefault();
+					}
+				}
+				submitButton.addEventListener("click", checkVoting, false);
+			})();
+		</script>
 	</body>
 </html>
