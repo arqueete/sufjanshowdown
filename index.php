@@ -129,7 +129,6 @@
 	function getSongs() {
 		$songs = db_query("SELECT id FROM songs WHERE active=1");
 
-		$row = mysqli_fetch_assoc($songs);
 		$ids = array();
 		while ($row = mysqli_fetch_assoc($songs)) 
 		{
