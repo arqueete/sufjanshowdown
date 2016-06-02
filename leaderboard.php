@@ -46,9 +46,6 @@
 				<p>All songs start with a score of 1600 which rises and falls as they win and lose matchups. Only songs that have had the opportunity to be voted upon appear in the leaderboard. </p>
 			</div>
 		</div>
-		<div class="message">
-			<p>The leaderboard will not be very useful until more votes have been cast.</p>
-		</div>
 		<div class="voting">
 			<div class="voting__inner">
 			<table class="leaderboard">
