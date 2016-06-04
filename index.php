@@ -19,11 +19,11 @@
 		
 
 		//get the ids of all games
-		$games = db_query("SELECT id FROM games");
+		$games = db_query("SELECT `id` FROM `games`");
 		$ids = array();
 		while ($row = mysqli_fetch_assoc($games)) 
 		{
-			$ids[] = $row[id];
+			$ids[] = $row['id'];
 		}
 		
 		//do checks to make sure the game and vote are valid
@@ -43,7 +43,7 @@
 		if ($validGame == true && $vote == 'skip') {
 		
 			//If they didn't vote, just delete the game
-			$deleteGame = db_query("DELETE FROM `games` WHERE id=$gameID");
+			$deleteGame = db_query("DELETE FROM `games` WHERE `id`=$gameID");
 			//echo "Game skipped";
 		
 		
@@ -51,7 +51,7 @@
 		
 			if ($validGame == true) {
 				//get songs IDs for that game
-				$theseSongs = db_query("SELECT `left`,`right` FROM `games` where id=$gameID");
+				$theseSongs = db_query("SELECT `left`,`right` FROM `games` where `id`=$gameID");
 				$theseSongsInfo = mysqli_fetch_assoc($theseSongs);
 
 			}
@@ -77,37 +77,37 @@
 				
 				foreach ($theseSongsInfo as $key=>$value) {
 					$thisSong = array();
-					$thisSong[id] = $value;
+					$thisSong['id'] = $value;
 					if ($value == $vote) {
-						$thisSong[winning] = 1;
+						$thisSong['winning'] = 1;
 					} else {
-						$thisSong[winning] = 0;
+						$thisSong['winning'] = 0;
 					}
-					$thisSongInfo = db_query("SELECT * FROM songs WHERE id='$thisSong[id]'" );
+					$thisSongInfo = db_query("SELECT * FROM `songs` WHERE `id`='$thisSong[id]'" );
 					$thisSongRow = mysqli_fetch_assoc($thisSongInfo);
-					$thisSong[title] = $thisSongRow[title];
-					$thisSong[rating] = $thisSongRow[rating];
-					$thisSong[games] = $thisSongRow[games];
-					$thisSong[wins] = $thisSongRow[wins];
+					$thisSong['title'] = $thisSongRow['title'];
+					$thisSong['rating'] = $thisSongRow['rating'];
+					$thisSong['games'] = $thisSongRow['games'];
+					$thisSong['wins'] = $thisSongRow['wins'];
 					$thisGameSongs[] = $thisSong;
 				}
 				
 				//time to do some math and figure out the new scores
 				
 				function updateSong($player,$opponent) {
-					$playerID = $player[id];
-					$winProbability = 1 / (10 ** (($opponent[rating] - $player[rating])/400) + 1);
-					$point = $player[winning];
-					$newRating = $player[rating] + (20 * ($point - $winProbability));
+					$playerID = $player['id'];
+					$winProbability = 1 / (10 ** (($opponent['rating'] - $player['rating'])/400) + 1);
+					$point = $player['winning'];
+					$newRating = $player['rating'] + (20 * ($point - $winProbability));
 					
-					$newGames = $player[games] + 1;
-					if ($player[winning] == 1) {
-						$newWins = $player[wins] + 1;
+					$newGames = $player['games'] + 1;
+					if ($player['winning'] == 1) {
+						$newWins = $player['wins'] + 1;
 					} else {
-						$newWins = $player[wins];
+						$newWins = $player['wins'];
 					}
 
-					$updateSongRating = db_query("UPDATE `songs` SET games='$newGames',wins='$newWins',rating='$newRating' WHERE id=$playerID");
+					$updateSongRating = db_query("UPDATE `songs` SET `games`='$newGames',`wins`='$newWins',`rating`='$newRating' WHERE `id`=$playerID");
 
 					
 				}
@@ -116,7 +116,7 @@
 				updateSong($thisGameSongs[1],$thisGameSongs[0]);
 
 				
-				$deleteGame = db_query("DELETE FROM `games` WHERE id=$gameID");
+				$deleteGame = db_query("DELETE FROM `games` WHERE `id`=$gameID");
 
 			}
 		}
@@ -127,12 +127,12 @@
 
 	//Get IDs of all active songs
 	function getSongs() {
-		$songs = db_query("SELECT id FROM songs WHERE active=1");
+		$songs = db_query("SELECT `id` FROM `songs` WHERE `active`=1");
 
 		$ids = array();
 		while ($row = mysqli_fetch_assoc($songs)) 
 		{
-			$ids[] = $row[id];
+			$ids[] = $row['id'];
 		}
 		
 		return $ids;
@@ -147,7 +147,7 @@
 
 		
 		//get the title of the song at that ID
-		$song = db_query("SELECT * FROM songs WHERE id='$randomID'" );
+		$song = db_query("SELECT * FROM `songs` WHERE `id`='$randomID'" );
 		$songInfo = mysqli_fetch_assoc($song);
 		
 		return $songInfo;
@@ -162,7 +162,7 @@
 		function checkSongs($left,$right,$checkCounter,$ids) {
 			//if the same song is randomly picked more than three times in a row, there's probably something wrong
 			if ($checkCounter < 3) {
-				if ($left[id] == $right[id]) {
+				if ($left['id'] == $right['id']) {
 					//they're the same song, get a new right song
 					$checkCounter++;
 					$right = getRandomSong($ids);
@@ -196,13 +196,13 @@
 		$gameID = mysqli_insert_id($connection);
 		
 		function getAlbum($albumID) {
-			$album = db_query("SELECT * FROM `albums` WHERE id='$albumID'" );
+			$album = db_query("SELECT * FROM `albums` WHERE `id`='$albumID'" );
 			$albumInfo = mysqli_fetch_assoc($album);
 			return $albumInfo;
 		}
 
-		$leftAlbumInfo = getAlbum($left[album]);
-		$rightAlbumInfo = getAlbum($right[album]);
+		$leftAlbumInfo = getAlbum($left['album']);
+		$rightAlbumInfo = getAlbum($right['album']);
 	
 	}
 
@@ -251,42 +251,42 @@
 				<div class="voting__inner">
 					<!-- CHECK FOR VALID GENERATION -->
 					<?php if ($randomSongs) { ?>
-					<input type="radio" value="<?php echo $left[id]; ?>" name="song" class="game__input" id="left" />
+					<input type="radio" value="<?php echo $left['id']; ?>" name="song" class="game__input" id="left" />
 					<label class="game" for="left">
-						<span class="game__song" title="<?php echo $left[title]; ?>">"<?php echo $left[title]; ?>"</span> 
+						<span class="game__song" title="<?php echo $left['title']; ?>">"<?php echo $left['title']; ?>"</span> 
 						<span class="game__from">from</span> 
 						<span class="game__album">
-							<?php if ($leftAlbumInfo[bandcamp]) { ?>
-							<a href="<?php echo $leftAlbumInfo[bandcamp]; ?>" target="_blank">
+							<?php if ($leftAlbumInfo['bandcamp']) { ?>
+							<a href="<?php echo $leftAlbumInfo['bandcamp']; ?>" target="_blank">
 							<?php } ?>
-								<?php echo $leftAlbumInfo[name]; ?>
-							<?php if ($leftAlbumInfo[bandcamp]) { ?>
+								<?php echo $leftAlbumInfo['name']; ?>
+							<?php if ($leftAlbumInfo['bandcamp']) { ?>
 							</a> 
 							<?php } ?>
 							<?php ?>
-							<span class="game__year"> (<?php echo $leftAlbumInfo[year]; ?>)</span>
+							<span class="game__year"> (<?php echo $leftAlbumInfo['year']; ?>)</span>
 						</span>
 						<?php
-							if ($leftAlbumInfo[boxset]) {
-								echo "<span class='game__boxset'>" . $leftAlbumInfo[boxset] . "</span>";
+							if ($leftAlbumInfo['boxset']) {
+								echo "<span class='game__boxset'>" . $leftAlbumInfo['boxset'] . "</span>";
 							}
 						?>
 						<div class="game__embed">
 						<?php
-							if ($left[url] && $leftAlbumInfo[url]) {
-								echo "<iframe style='border: 0; width: 100%; height: 42px;' src='http://bandcamp.com/EmbeddedPlayer/album=". $leftAlbumInfo[url] ."/size=small/bgcol=ffffff/linkcol=333333/track=" . $left[url] . "/transparent=true/' seamless><a href='". $leftAlbumInfo[bandcamp] ."'>" . $left[title] . "by Sufjan Stevens</a></iframe>"; 
-							} else if ($left[url] && $leftAlbumInfo[url] == 0) {
-								echo "<iframe style='border: 0; width: 100%; height: 42px;' src='http://bandcamp.com/EmbeddedPlayer/track=". $left[url] ."/size=small/bgcol=ffffff/linkcol=333333/transparent=true/' seamless><a href='". $leftAlbumInfo[bandcamp] ."'>" . $left[title] . "by Sufjan Stevens</a></iframe>";
+							if ($left['url'] && $leftAlbumInfo['url']) {
+								echo "<iframe style='border: 0; width: 100%; height: 42px;' src='http://bandcamp.com/EmbeddedPlayer/album=". $leftAlbumInfo['url'] ."/size=small/bgcol=ffffff/linkcol=333333/track=" . $left['url'] . "/transparent=true/' seamless><a href='". $leftAlbumInfo['bandcamp'] ."'>" . $left['title'] . "by Sufjan Stevens</a></iframe>"; 
+							} else if ($left['url'] && $leftAlbumInfo['url'] == 0) {
+								echo "<iframe style='border: 0; width: 100%; height: 42px;' src='http://bandcamp.com/EmbeddedPlayer/track=". $left['url'] ."/size=small/bgcol=ffffff/linkcol=333333/transparent=true/' seamless><a href='". $leftAlbumInfo['bandcamp'] ."'>" . $left['title'] . "by Sufjan Stevens</a></iframe>";
 							} else {
 								echo "Song embed not available.";
 							};
 						?>
 						</div>
 						<?php 
-							if ($left[comment]) {
-								echo "<span class='game__comment'>" . $left[comment] . "</span>";
+							if ($left['comment']) {
+								echo "<span class='game__comment'>" . $left['comment'] . "</span>";
 							} else {
-								echo "<span class='game__comment'>" . $leftAlbumInfo[comment] . "</span>";
+								echo "<span class='game__comment'>" . $leftAlbumInfo['comment'] . "</span>";
 							}
 						?>
 						<span class="game__select">Pick me!</button>
@@ -294,43 +294,43 @@
 					
 					<span class="vs">VS.</span>
 					
-					<input type="radio" value="<?php echo $right[id]; ?>" name="song" class="game__input" id="right">
+					<input type="radio" value="<?php echo $right['id']; ?>" name="song" class="game__input" id="right">
 					<label class="game" for="right">
-						<span class="game__song" title="<?php echo $right[title]; ?>">"<?php echo $right[title]; ?>"</span> 
+						<span class="game__song" title="<?php echo $right['title']; ?>">"<?php echo $right['title']; ?>"</span> 
 						<span class="game__from">from</span> 
 						<span class="game__album">
-							<?php if ($rightAlbumInfo[bandcamp]) { ?>
-								<a href="<?php echo $rightAlbumInfo[bandcamp]; ?>" target="_blank">
+							<?php if ($rightAlbumInfo['bandcamp']) { ?>
+								<a href="<?php echo $rightAlbumInfo['bandcamp']; ?>" target="_blank">
 							<?php } ?>
-								<?php echo $rightAlbumInfo[name]; ?>
-							<?php if ($rightAlbumInfo[bandcamp]) { ?>
+								<?php echo $rightAlbumInfo['name']; ?>
+							<?php if ($rightAlbumInfo['bandcamp']) { ?>
 							</a> 
 							<?php } ?>
 							<?php ?>
 						
-							<span class="game__year"> (<?php echo $rightAlbumInfo[year]; ?>)</span>
+							<span class="game__year"> (<?php echo $rightAlbumInfo['year']; ?>)</span>
 						</span>
 						<?php
-							if ($rightAlbumInfo[boxset]) {
-								echo "<span class='game__boxset'>" . $rightAlbumInfo[boxset] . "</span>";
+							if ($rightAlbumInfo['boxset']) {
+								echo "<span class='game__boxset'>" . $rightAlbumInfo['boxset'] . "</span>";
 							}
 						?>
 						<div class="game__embed">
 						<?php
-							if ($right[url] && $rightAlbumInfo[url]) {
-								echo "<iframe style='border: 0; width: 100%; height: 42px;' src='http://bandcamp.com/EmbeddedPlayer/album=". $rightAlbumInfo[url] ."/size=small/bgcol=ffffff/linkcol=333333/track=" . $right[url] . "/transparent=true/' seamless><a href='". $rightAlbumInfo[bandcamp] ."'>" . $right[title] . "by Sufjan Stevens</a></iframe>"; 
-							} else if ($right[url] && $rightAlbumInfo[url] == 0) {
-								echo "<iframe style='border: 0; width: 100%; height: 42px;' src='http://bandcamp.com/EmbeddedPlayer/track=". $right[url] ."/size=small/bgcol=ffffff/linkcol=333333/transparent=true/' seamless><a href='". $rightAlbumInfo[bandcamp] ."'>" . $right[title] . "by Sufjan Stevens</a></iframe>";
+							if ($right['url'] && $rightAlbumInfo['url']) {
+								echo "<iframe style='border: 0; width: 100%; height: 42px;' src='http://bandcamp.com/EmbeddedPlayer/album=". $rightAlbumInfo['url'] ."/size=small/bgcol=ffffff/linkcol=333333/track=" . $right['url'] . "/transparent=true/' seamless><a href='". $rightAlbumInfo['bandcamp'] ."'>" . $right['title'] . "by Sufjan Stevens</a></iframe>"; 
+							} else if ($right['url'] && $rightAlbumInfo['url'] == 0) {
+								echo "<iframe style='border: 0; width: 100%; height: 42px;' src='http://bandcamp.com/EmbeddedPlayer/track=". $right['url'] ."/size=small/bgcol=ffffff/linkcol=333333/transparent=true/' seamless><a href='". $rightAlbumInfo['bandcamp'] ."'>" . $right['title'] . "by Sufjan Stevens</a></iframe>";
 							} else {
 								echo "Song embed not available.";
 							};
 						?>
 						</div>
 						<?php 
-							if ($right[comment]) {
-								echo "<span class='game__comment'>" . $right[comment] . "</span>";
+							if ($right['comment']) {
+								echo "<span class='game__comment'>" . $right['comment'] . "</span>";
 							} else {
-								echo "<span class='game__comment'>" . $rightAlbumInfo[comment] . "</span>";
+								echo "<span class='game__comment'>" . $rightAlbumInfo['comment'] . "</span>";
 							}
 						?>
 						<span class="game__select">Pick me!</button>

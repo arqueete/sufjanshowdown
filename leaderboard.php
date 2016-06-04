@@ -15,11 +15,11 @@
 	$albums = array();
 	while ($albumsInfo = mysqli_fetch_assoc($albumsQuery)) 
 	{
-		$id = $albumsInfo[id];
-		if ($albumsInfo[boxset]) {
-			$albums[$id] = $albumsInfo[boxset];
+		$id = $albumsInfo['id'];
+		if ($albumsInfo['boxset']) {
+			$albums[$id] = $albumsInfo['boxset'];
 		} else {
-			$albums[$id] = $albumsInfo[name];
+			$albums[$id] = $albumsInfo['name'];
 		}
 	}
 
@@ -55,14 +55,14 @@
 				{
 					echo "<tr>";
 					echo "<td class='leaderboard__cell'>";
-					echo $row[title];
+					echo $row['title'];
 					echo "</td>";
 					echo "<td class='leaderboard__cell'>";
-					$thisAlbum = $row[album];
+					$thisAlbum = $row['album'];
 					echo $albums[$thisAlbum];
 					echo "</td>";
 					echo "<td class='leaderboard__cell'>";
-					echo $row[rating];
+					echo $row['rating'];
 					echo "</td>";
 					echo "</tr>";
 				} 
