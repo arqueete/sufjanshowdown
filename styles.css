@@ -233,14 +233,33 @@ a:visited {
 	color: #fff;
 }
 
-.leaderboard th {
+.leaderboard__header {
 	padding: 10px;
+	text-align: left;
+}
+
+.leaderboard__header--rating {
+	text-align: right;
 }
 
 .leaderboard__cell {
 	padding: 10px;
 	margin: 5px;
 	background-color: #fff;
+}
+
+.leaderboard__cell--rank {
+	font-weight: bold;
+	text-align: right;
+}
+
+.leaderboard__cell--rating {
+	text-align: right;
+}
+
+.leaderboard__album {
+	font-size: .8em;
+	margin: 5px 0;
 }
 
 .leaderboard  tr:nth-child(odd) .leaderboard__cell{
