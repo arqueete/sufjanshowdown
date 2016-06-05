@@ -9,7 +9,7 @@
 		return $result;
 	}
 	
-	$songsQuery = db_query("SELECT * FROM songs WHERE active=1 AND games!=0 ORDER BY rating DESC");
+	$songsQuery = db_query("SELECT * FROM songs WHERE active=1 AND games>10 ORDER BY rating DESC");
 	$gamesQuery = db_query("SELECT SUM(games) AS games_total FROM songs WHERE active=1");
 	$gamesTotal = mysqli_fetch_assoc($gamesQuery);
 	$matchups = ($gamesTotal['games_total'] / 2);
@@ -20,7 +20,7 @@
 	{
 		$thisAlbum = array();
 		$id = $albumsInfo['id'];
-		$queryAverageRating = db_query("SELECT AVG(rating) AS songs_average FROM songs WHERE active=1 AND games!=0 AND album=$id");
+		$queryAverageRating = db_query("SELECT AVG(rating) AS songs_average FROM songs WHERE active=1 AND games>10 AND album=$id");
 		$songsAverageRating = mysqli_fetch_assoc($queryAverageRating);
 		$bandcamp = $albumsInfo['bandcamp'];
 		if ($albumsInfo['boxset']) {
@@ -55,8 +55,7 @@
 				<nav class="nav"><a href="index.php" class="nav__item">Vote</a> <a href="leaderboard.php" class="nav__item nav__item--active">Leaderboard</a></nav>
 				<h1>Showdown Leaderboard</h1>
 				<span class="subtitle">(Or, Let Us Look Upon Popular Opinion!)</span>
-				<p>All songs start with a score of 1600 which rises and falls as they win and lose matchups, with the change in rating depending on the current rating of the song they were matched with. Only songs that have had the opportunity to be voted upon appear in the leaderboard.</p>
-				<p><a href="/sufjanshowdown/">Back to voting!</a></p>
+				<p>All songs start with a score of 1600 which rises and falls as they win and lose matchups, with the change in rating depending on the song they were matched with. Only songs that have had the opportunity to be voted upon at least ten times appear in the leaderboard.</p>
 			</div>
 		</div>
 		<div class="voting">
