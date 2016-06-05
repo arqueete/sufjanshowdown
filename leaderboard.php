@@ -33,6 +33,7 @@
 		$thisAlbum['rating'] = ceil($songsAverageRating['songs_average']);
 		$albums[$id] = $thisAlbum;
 	}
+	
 
 ?>
 
@@ -62,13 +63,55 @@
 				<div class="copy">
 					<div class="copy__inner">
 						<p><strong><?php echo $matchups; ?></strong> matchups have been voted on.</p>
+						
+						<h2>Top Albums</h2>
+						
+						<?php
+							//sort the albums by rating
+							$sortedAlbums = $albums;
+							$albumsSorting = array();
+							foreach ($sortedAlbums as $key => $row) {
+								$albumsSorting[$key]  = $row['rating'];
+							}
+							array_multisort($albumsSorting, SORT_DESC, $sortedAlbums);
+							$totalAlbums = (count($albums) - 1);
+
+						?>
+						<table class="leaderboard">
+						<thead><th class="leaderboard__header leaderboard__header--rating">Rank</th><th class="leaderboard__header">Album</th><th class="leaderboard__header leaderboard__header--rating">Average Song Rating</th></thead>
+						<?php
+							$albumRank = 0;
+							for ($i = 0; $i <= $totalAlbums; $i++)
+							{
+								echo "<tr>";
+								echo "<td class='leaderboard__cell leaderboard__cell--rank'>";
+								if (isset($sortedAlbums[$i - 1]['rating']) && $sortedAlbums[$i - 1]['rating'] == $sortedAlbums[$i]['rating']) {
+									echo '&nbsp;';
+								} else {
+									$albumRank++;
+									echo $albumRank;
+								}
+								echo "</td>";
+								echo "<td class='leaderboard__cell'>";
+								echo "<i><a href='" . $sortedAlbums[$i]['url'] . "' target='_blank'>" . $sortedAlbums[$i]['name'] . "</a></i> (" . $sortedAlbums[$i]['year'] .")";
+								echo "</td>";
+								echo "<td class='leaderboard__cell leaderboard__cell--rating'>";
+								echo $sortedAlbums[$i]['rating'];
+								echo "</td>";
+								echo "</td>";
+								echo "</tr>";
+							}
+						?>
+						</table>
+						
+						
 						<h2>Top Songs</h2>
 						<table class="leaderboard">
 						<thead><th class="leaderboard__header leaderboard__header--rating">Rank</th><th class="leaderboard__header">Song</th><th class="leaderboard__header leaderboard__header--rating">Score</th><th class="leaderboard__header leaderboard__header--rating">% Won</th></thead>
 						<?php
 							$songRank = 0;
 							$thisSong = 0;
-							while (($row = mysqli_fetch_assoc($songsQuery)) && $songRank < 20) 
+							while ($row = mysqli_fetch_assoc($songsQuery)) 
 							{
 								$thisAlbum = $row['album'];
 								echo "<tr>";
@@ -98,27 +141,7 @@
 							} 
 						?>
 						</table>
-						<h2>Album Ratings</h2>
-						<table class="leaderboard">
-						<thead><th class="leaderboard__header leaderboard__header--rating">Year</th><th class="leaderboard__header">Album</th><th class="leaderboard__header leaderboard__header--rating">Average Song Rating</th></thead>
-						<?php
-							foreach ($albums as $album)
-							{
-								echo "<tr>";
-								echo "<td class='leaderboard__cell leaderboard__cell--rating'>";
-								echo $album['year'];
-								echo "</td>";
-								echo "<td class='leaderboard__cell'>";
-								echo "<i><a href='" . $album['url'] . "' target='_blank'>" . $album['name'] . "</a></i>";
-								echo "</td>";
-								echo "<td class='leaderboard__cell leaderboard__cell--rating'>";
-								echo $album['rating'];
-								echo "</td>";
-								echo "</td>";
-								echo "</tr>";
-							} 
-						?>
-						</table>
+						
 					</div>
 				</div>
 			</div>
