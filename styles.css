@@ -56,11 +56,47 @@ a:visited {
 .copy__inner {
 	max-width: 60em;
 	margin: 0 auto;
-	padding: 1em;
+	padding: 0 1em 1em 1em;
+	overflow: hidden; /* avoiding margin collapse */
 }
 
 .copy__links {
 	text-align: right;
+	padding-top: 1em;
+}
+
+.copy__highlight {
+	margin: 1em;
+	padding: 1em;
+	border: 1px dashed #ccc;
+}
+
+.nav {
+	margin: 0 0 20px;
+	text-align: right;
+}
+
+.nav__item {
+	display: inline-block;
+	margin: 0 5px 5px;
+	padding: 5px 10px;
+	font-size: .9em;
+	border-bottom-right-radius: 5px;
+	border-bottom-left-radius: 5px;
+	border: 1px solid #ccc;
+	border-top: none;
+}
+
+.nav__item--active:link {
+	background-color: #587C12;
+	color: #fff;
+	text-decoration: none;
+}
+
+.nav__item--active:visited {
+	background-color: #48650F;
+	color: #fff;
+	text-decoration: none;
 }
 
 .message {
@@ -236,6 +272,7 @@ a:visited {
 .leaderboard__header {
 	padding: 10px;
 	text-align: left;
+	font-size: .9em;
 }
 
 .leaderboard__header--rating {
@@ -243,9 +280,10 @@ a:visited {
 }
 
 .leaderboard__cell {
-	padding: 10px;
+	padding: 10px 5px;
 	margin: 5px;
 	background-color: #fff;
+	font-size: .9em;
 }
 
 .leaderboard__cell--rank {
@@ -295,5 +333,12 @@ a:visited {
 		display: block;
 		max-width: 300px;
 		margin: 0 auto;
+	}
+	.leaderboard__header {
+		font-size: 1em;
+	}
+	.leaderboard__cell {
+		font-size: 1em;
+		padding: 10px;
 	}
 }

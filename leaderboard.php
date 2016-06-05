@@ -52,9 +52,10 @@
 	<body>
 		<div class="copy">
 			<div class="copy__inner">
+				<nav class="nav"><a href="index.php" class="nav__item">Vote</a> <a href="leaderboard.php" class="nav__item nav__item--active">Leaderboard</a></nav>
 				<h1>Showdown Leaderboard</h1>
 				<span class="subtitle">(Or, Let Us Look Upon Popular Opinion!)</span>
-				<p>All songs start with a score of 1600 which rises and falls as they win and lose matchups. Only songs that have had the opportunity to be voted upon appear in the leaderboard. </p>
+				<p>All songs start with a score of 1600 which rises and falls as they win and lose matchups, with the change in rating depending on the current rating of the song they were matched with. Only songs that have had the opportunity to be voted upon appear in the leaderboard.</p>
 				<p><a href="/sufjanshowdown/">Back to voting!</a></p>
 			</div>
 		</div>
@@ -62,9 +63,9 @@
 			<div class="voting__inner">
 				<div class="copy">
 					<div class="copy__inner">
-						<p><strong><?php echo $matchups; ?></strong> matchups have been voted on.</p>
+						<p class="copy__highlight"><strong><?php echo $matchups; ?></strong> matchups have been voted on so far. <a href="index.php">Every vote counts!</a></p>
 						
-						<h2>Top Albums</h2>
+						<h2>Average Song Rating by Album</h2>
 						
 						<?php
 							//sort the albums by rating

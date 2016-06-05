@@ -223,6 +223,7 @@
 	<body>
 		<div class="copy">
 			<div class="copy__inner">
+				<nav class="nav"><a href="index.php" class="nav__item nav__item--active">Vote</a> <a href="leaderboard.php" class="nav__item">Leaderboard</a></nav>
 				<h1>Sufjan Showdown</h1>
 				<span class="subtitle">(Or, Consider a New Way of Voting On Favorite Songs!)</span>
 				<p>We'll show you two songs by indie artist Sufjan Stevens. You pick which one you like better. Together, we'll determine the most beloved songs in the singer-songwriter's catalog.</p>
@@ -249,7 +250,7 @@
 		<form method="post" action="index.php">
 			<div class="voting">
 				<div class="voting__inner">
-					<!-- CHECK FOR VALID GENERATION -->
+
 					<?php if ($randomSongs) { ?>
 					<input type="radio" value="<?php echo $left['id']; ?>" name="song" class="game__input" id="left" />
 					<label class="game" for="left">
@@ -346,8 +347,7 @@
 				<input type="submit" name="vote" value="Vote" id="vote" class="voting__submit" />
 				<span id="validation" class="hidden">Please choose an option</span>
 				<?php } ?>
-				<!-- END CHECK -->
-				<a href="leaderboard.php" class="voting__leaderboard">View the Leaderboard</a>
+
 			</div>
 		</form>
 		<footer class="copy">
