@@ -353,7 +353,7 @@
 		<footer class="copy">
 			<div class="copy__inner">
 				<nav class="copy__links">
-					<a href="mailto:jessica@jessicagleason.com" class="copy__link">Report a problem</a>
+					<small>This site has no affiliation with <a href="http://music.sufjan.com/" class="copy__link" target="_blank">Sufjan Stevens</a> or <a href="http://asthmatickitty.com/" class="copy__link" target="_blank">Asthmatic Kitty</a>. <a href="mailto:jessica@jessicagleason.com" class="copy__link">Report a problem?</a></small>
 				</nav>
 			</div>
 		</footer>

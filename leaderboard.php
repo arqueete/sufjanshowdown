@@ -55,7 +55,7 @@
 				<nav class="nav"><a href="index.php" class="nav__item">Vote</a> <a href="leaderboard.php" class="nav__item nav__item--active">Leaderboard</a></nav>
 				<h1>Showdown Leaderboard</h1>
 				<span class="subtitle">(Or, Let Us Look Upon Popular Opinion!)</span>
-				<p>All songs start with a score of 1600 which rises and falls as they win and lose matchups, with the change in rating depending on the song they were matched with. Only songs that have had the opportunity to be voted upon at least ten times appear in the leaderboard.</p>
+				<p>All songs start with a rating of 1600 which rises or falls according to how they fare against other songs in matchups. Only songs that have been in at least ten completed matchups appear in the leaderboard and factor into album averages.</p>
 			</div>
 		</div>
 		<div class="voting">
@@ -150,7 +150,7 @@
 		<footer class="copy">
 			<div class="copy__inner">
 				<nav class="copy__links">
-					<a href="mailto:jessica@jessicagleason.com" class="copy__link">Report a problem</a>
+					<small>This site has no affiliation with <a href="http://music.sufjan.com/" class="copy__link" target="_blank">Sufjan Stevens</a> or <a href="http://asthmatickitty.com/" class="copy__link" target="_blank">Asthmatic Kitty</a>. <a href="mailto:jessica@jessicagleason.com" class="copy__link">Report a problem?</a></small>
 				</nav>
 			</div>
 		</footer>
