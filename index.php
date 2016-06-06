@@ -47,14 +47,12 @@
 			//echo "Game skipped";
 		
 		
-		} else {
+		} else if ($validGame == true) {
 		
-			if ($validGame == true) {
-				//get songs IDs for that game
-				$theseSongs = db_query("SELECT `left`,`right` FROM `games` where `id`=$gameID");
-				$theseSongsInfo = mysqli_fetch_assoc($theseSongs);
+			//get songs IDs for that game
+			$theseSongs = db_query("SELECT `left`,`right` FROM `games` where `id`=$gameID");
+			$theseSongsInfo = mysqli_fetch_assoc($theseSongs);
 
-			}
 			
 			//check that the voted song is a part of this game
 			$validSong = false;
@@ -216,6 +214,7 @@
         <meta http-equiv="x-ua-compatible" content="ie=edge">
         <meta name="description" content="Vote to help determine the most-loved Sufjan Stevens songs.">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="canonical" href="http://www.sufjanshowdown.com" />
 		<link href='https://fonts.googleapis.com/css?family=Roboto:900' rel='stylesheet' type='text/css'>
 		<link rel="stylesheet" href="normalize.css" />
 		<link rel="stylesheet" href="styles.css" />
