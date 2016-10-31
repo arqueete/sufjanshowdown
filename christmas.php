@@ -39,9 +39,9 @@
 					$thisSongInfo = db_query("SELECT * FROM `songs` WHERE `id`='$thisSong[id]'" );
 					$thisSongRow = mysqli_fetch_assoc($thisSongInfo);
 					$thisSong['title'] = $thisSongRow['title'];
-					$thisSong['rating'] = $thisSongRow['rating'];
-					$thisSong['games'] = $thisSongRow['games'];
-					$thisSong['wins'] = $thisSongRow['wins'];
+					$thisSong['rating'] = $thisSongRow['xmasrating'];
+					$thisSong['games'] = $thisSongRow['xmasgames'];
+					$thisSong['wins'] = $thisSongRow['xmaswins'];
 					$thisGameSongs[] = $thisSong;
 				}
 				
@@ -60,7 +60,7 @@
 						$newWins = $player['wins'];
 					}
 
-					$updateSongRating = db_query("UPDATE `songs` SET `games`='$newGames',`wins`='$newWins',`rating`='$newRating' WHERE `id`=$playerID");
+					$updateSongRating = db_query("UPDATE `songs` SET `xmasgames`='$newGames',`xmaswins`='$newWins',`xmasrating`='$newRating' WHERE `id`=$playerID");
 
 					
 				}
@@ -79,7 +79,7 @@
 
 	//Get IDs of all active songs
 	function getSongs() {
-		$songs = db_query("SELECT `id` FROM `songs` WHERE `active`=1");
+		$songs = db_query("SELECT `id` FROM `songs` WHERE `active`=1 AND (`album`=7 OR `album`=8 OR `album`=9 OR `album`=10 OR `album`=11 OR `album`=14 OR `album`=15 OR `album`=16 OR `album`=17 OR `album`=18)");
 
 		$ids = array();
 		while ($row = mysqli_fetch_assoc($songs)) 
@@ -134,7 +134,7 @@
 				?>
 			</div>
 		<?php } ?>
-		<form method="post" action="index.php">
+		<form method="post" action="christmas.php">
 			<div class="voting">
 				<div class="voting__inner">
 
