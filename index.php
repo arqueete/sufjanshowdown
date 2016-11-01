@@ -22,7 +22,7 @@
 		
 		} else if ($validGame == true) {
 		
-			include "includes/hecksongs.php";
+			include "includes/checksongs.php";
 
 			if ($validSong == true) {
 				//array of songs in game and their winning status
