@@ -1,5 +1,5 @@
 <?php 
-	include 'dbconnect.php';
+	include 'includes/dbconnect.php';
 
 	function db_query($query) {
 		$connection = db_connect();
@@ -11,7 +11,7 @@
 	//If they're coming from submitting a vote, process that
 	if (!empty($_POST)) {
 	
-		include "checkgame.php";
+		include "includes/checkgame.php";
 		
 		if ($validGame == true && $vote == 'skip') {
 		
@@ -22,7 +22,7 @@
 		
 		} else if ($validGame == true) {
 		
-			include "checksongs.php";
+			include "includes/hecksongs.php";
 
 			if ($validSong == true) {
 				//array of songs in game and their winning status
@@ -90,7 +90,7 @@
 		return $ids;
 	}
 	
-	include "getsongs.php";
+	include "includes/getsongs.php";
 
 ?>
 
@@ -115,6 +115,9 @@
 				<span class="subtitle">(Or, Consider a New Way of Voting On Favorite Songs!)</span>
 				<p>We'll show you two songs by indie artist Sufjan Stevens. You pick which one you like better. Together, we'll determine the most beloved songs in the singer-songwriter's catalog.</p>
 			</div>
+		</div>
+		<div class="message message--holiday">
+			<p>Feeling That Creepy Christmas Feeling? Cast your votes in the <a href="christmas/">Sufjan Christmas Showdown</a>!</p>
 		</div>
 		<?php if (!empty($_POST) || $randomSongs == null) { ?>
 			<div class="message">
@@ -237,6 +240,6 @@
 
 			</div>
 		</form>
-		<?php include "footer.html"; ?>
+		<?php include "includes/footer.html"; ?>
 	</body>
 </html>

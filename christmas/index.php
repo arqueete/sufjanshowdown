@@ -1,5 +1,5 @@
 <?php 
-	include 'dbconnect.php';
+	include '../includes/dbconnect.php';
 
 	function db_query($query) {
 		$connection = db_connect();
@@ -11,7 +11,7 @@
 	//If they're coming from submitting a vote, process that
 	if (!empty($_POST)) {
 	
-		include "checkgame.php";
+		include "../includes/checkgame.php";
 		
 		if ($validGame == true && $vote == 'skip') {
 		
@@ -22,7 +22,7 @@
 		
 		} else if ($validGame == true) {
 		
-			include "checksongs.php";
+			include "../includes/checksongs.php";
 
 			if ($validSong == true) {
 				//array of songs in game and their winning status
@@ -90,7 +90,7 @@
 		return $ids;
 	}
 	
-	include "getsongs.php";
+	include "../includes/getsongs.php";
 
 ?>
 
@@ -104,16 +104,16 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
 		<link rel="canonical" href="http://www.sufjanshowdown.com" />
 		<link href='https://fonts.googleapis.com/css?family=Roboto:900' rel='stylesheet' type='text/css'>
-		<link rel="stylesheet" href="normalize.css" />
-		<link rel="stylesheet" href="styles.css" />
+		<link rel="stylesheet" href="../normalize.css" />
+		<link rel="stylesheet" href="../styles.css" />
 	</head>
-	<body>
+	<body class="xmas">
 		<div class="copy">
 			<div class="copy__inner">
-				<nav class="nav"><a href="index.php" class="nav__item nav__item--active">Vote</a> <a href="leaderboard.php" class="nav__item">Leaderboard</a></nav>
-				<h1>Sufjan Showdown</h1>
+				<nav class="nav"><a href="http://www.sufjanshowdown.com" class="nav__item">Regular Voting</a> <a href="index.php" class="nav__item nav__item--active">Christmas Voting</a> <a href="leaderboard.php" class="nav__item">Christmas Leaderboard</a></nav>
+				<h1>Sufjan Christmas Showdown</h1>
 				<span class="subtitle">(Or, Consider a New Way of Voting On Favorite Songs!)</span>
-				<p>We'll show you two songs by indie artist Sufjan Stevens. You pick which one you like better. Together, we'll determine the most beloved songs in the singer-songwriter's catalog.</p>
+				<p>We'll show you two Christmas songs by indie artist Sufjan Stevens. You pick which one you like better. Together, we'll determine the most beloved songs in the singer-songwriter's holiday catalog.</p>
 			</div>
 		</div>
 		<?php if (!empty($_POST) || $randomSongs == null) { ?>
@@ -134,7 +134,7 @@
 				?>
 			</div>
 		<?php } ?>
-		<form method="post" action="christmas.php">
+		<form method="post" action="index.php">
 			<div class="voting">
 				<div class="voting__inner">
 
@@ -237,6 +237,6 @@
 
 			</div>
 		</form>
-		<?php include "footer.html"; ?>
+		<?php include "../includes/footer.html"; ?>
 	</body>
 </html>

@@ -8,7 +8,6 @@ html {
 
 body {
 	background-color: #fff;
-	background-repeat: repeat;
 	color: #1F160C;
 	min-height: 100%;
 }
@@ -21,6 +20,10 @@ h1 {
 	text-transform: uppercase;
 	margin-bottom: 0;
 	margin-top: 0;
+}
+
+.xmas h1 {
+	color: #b11212;
 }
 
 h1, h2 {
@@ -73,16 +76,16 @@ a:visited {
 
 .nav {
 	margin: 0 0 20px;
-	text-align: right;
+	text-align: center;
 }
 
 .nav__item {
 	display: inline-block;
-	margin: 0 5px 5px;
+	max-width: 200px;
+	text-align: center;
+	margin: 5px;
 	padding: 5px 10px;
 	font-size: .9em;
-	border-bottom-right-radius: 5px;
-	border-bottom-left-radius: 5px;
 	border: 1px solid #ccc;
 	border-top: none;
 }
@@ -107,10 +110,22 @@ a:visited {
 	color: #fff;
 }
 
+.message--holiday {
+	background-color: #820d0d;
+}
+
+.message a {
+	color: #fff;
+}
+
 .voting {
 	background-image:  url(bg.jpg);
 	width: 100%;
 	padding: 20px 0;
+}
+
+.xmas .voting {
+	background-image: url(./christmas/bgxmas.jpg);
 }
 
 .voting__submit, .voting__leaderboard {
@@ -340,5 +355,13 @@ a:visited {
 	.leaderboard__cell {
 		font-size: 1em;
 		padding: 10px;
+	}
+	.nav {
+		text-align: right;
+	}
+	.nav__item {
+		border-bottom-right-radius: 5px;
+		border-bottom-left-radius: 5px;
+		margin: 0 5px 5px;
 	}
 }
