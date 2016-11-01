@@ -9,7 +9,7 @@
 		return $result;
 	}
 	
-	$songsQuery = db_query("SELECT * FROM songs WHERE active=1 AND (`album`=7 OR `album`=8 OR `album`=9 OR `album`=10 OR `album`=11 OR `album`=14 OR `album`=15 OR `album`=16 OR `album`=17 OR `album`=18) ORDER BY xmasrating DESC");
+	$songsQuery = db_query("SELECT * FROM songs WHERE active=1 AND xmasgames>2  AND (`album`=7 OR `album`=8 OR `album`=9 OR `album`=10 OR `album`=11 OR `album`=14 OR `album`=15 OR `album`=16 OR `album`=17 OR `album`=18) ORDER BY xmasrating DESC");
 	$gamesQuery = db_query("SELECT SUM(xmasgames) AS games_total FROM songs WHERE active=1 AND (`album`=7 OR `album`=8 OR `album`=9 OR `album`=10 OR `album`=11 OR `album`=14 OR `album`=15 OR `album`=16 OR `album`=17 OR `album`=18)");
 	$gamesTotal = mysqli_fetch_assoc($gamesQuery);
 	$matchups = ($gamesTotal['games_total'] / 2);
@@ -21,7 +21,7 @@
 	{
 		$thisAlbum = array();
 		$id = $albumsInfo['id'];
-		$queryAverageRating = db_query("SELECT AVG(xmasrating) AS songs_average FROM songs WHERE active=1 AND album=$id");
+		$queryAverageRating = db_query("SELECT AVG(xmasrating) AS songs_average FROM songs WHERE active=1 AND xmasgames>2 AND album=$id");
 		$songsAverageRating = mysqli_fetch_assoc($queryAverageRating);
 		$bandcamp = $albumsInfo['bandcamp'];
 		if ($albumsInfo['boxset']) {
