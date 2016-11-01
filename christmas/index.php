@@ -1,5 +1,5 @@
 <?php 
-	include 'includes/dbconnect.php';
+	include '../includes/dbconnect.php';
 
 	function db_query($query) {
 		$connection = db_connect();
@@ -11,7 +11,7 @@
 	//If they're coming from submitting a vote, process that
 	if (!empty($_POST)) {
 	
-		include "includes/checkgame.php";
+		include "../includes/checkgame.php";
 		
 		if ($validGame == true && $vote == 'skip') {
 		
@@ -22,7 +22,7 @@
 		
 		} else if ($validGame == true) {
 		
-			include "includes/hecksongs.php";
+			include "../includes/checksongs.php";
 
 			if ($validSong == true) {
 				//array of songs in game and their winning status
@@ -39,9 +39,9 @@
 					$thisSongInfo = db_query("SELECT * FROM `songs` WHERE `id`='$thisSong[id]'" );
 					$thisSongRow = mysqli_fetch_assoc($thisSongInfo);
 					$thisSong['title'] = $thisSongRow['title'];
-					$thisSong['rating'] = $thisSongRow['rating'];
-					$thisSong['games'] = $thisSongRow['games'];
-					$thisSong['wins'] = $thisSongRow['wins'];
+					$thisSong['rating'] = $thisSongRow['xmasrating'];
+					$thisSong['games'] = $thisSongRow['xmasgames'];
+					$thisSong['wins'] = $thisSongRow['xmaswins'];
 					$thisGameSongs[] = $thisSong;
 				}
 				
@@ -60,7 +60,7 @@
 						$newWins = $player['wins'];
 					}
 
-					$updateSongRating = db_query("UPDATE `songs` SET `games`='$newGames',`wins`='$newWins',`rating`='$newRating' WHERE `id`=$playerID");
+					$updateSongRating = db_query("UPDATE `songs` SET `xmasgames`='$newGames',`xmaswins`='$newWins',`xmasrating`='$newRating' WHERE `id`=$playerID");
 
 					
 				}
@@ -79,7 +79,7 @@
 
 	//Get IDs of all active songs
 	function getSongs() {
-		$songs = db_query("SELECT `id` FROM `songs` WHERE `active`=1");
+		$songs = db_query("SELECT `id` FROM `songs` WHERE `active`=1 AND (`album`=7 OR `album`=8 OR `album`=9 OR `album`=10 OR `album`=11 OR `album`=14 OR `album`=15 OR `album`=16 OR `album`=17 OR `album`=18)");
 
 		$ids = array();
 		while ($row = mysqli_fetch_assoc($songs)) 
@@ -90,7 +90,7 @@
 		return $ids;
 	}
 	
-	include "includes/getsongs.php";
+	include "../includes/getsongs.php";
 
 ?>
 
@@ -104,20 +104,17 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
 		<link rel="canonical" href="http://www.sufjanshowdown.com" />
 		<link href='https://fonts.googleapis.com/css?family=Roboto:900' rel='stylesheet' type='text/css'>
-		<link rel="stylesheet" href="normalize.css" />
-		<link rel="stylesheet" href="styles.css" />
+		<link rel="stylesheet" href="../normalize.css" />
+		<link rel="stylesheet" href="../styles.css" />
 	</head>
-	<body>
+	<body class="xmas">
 		<div class="copy">
 			<div class="copy__inner">
-				<nav class="nav"><a href="index.php" class="nav__item nav__item--active">Vote</a> <a href="leaderboard.php" class="nav__item">Leaderboard</a></nav>
-				<h1>Sufjan Showdown</h1>
+				<nav class="nav"><a href="http://www.sufjanshowdown.com" class="nav__item">Regular Voting</a> <a href="index.php" class="nav__item nav__item--active">Christmas Voting</a> <a href="leaderboard.php" class="nav__item">Christmas Leaderboard</a></nav>
+				<h1>Sufjan Christmas Showdown</h1>
 				<span class="subtitle">(Or, Consider a New Way of Voting On Favorite Songs!)</span>
-				<p>We'll show you two songs by indie artist Sufjan Stevens. You pick which one you like better. Together, we'll determine the most beloved songs in the singer-songwriter's catalog.</p>
+				<p>We'll show you two Christmas songs by indie artist Sufjan Stevens. You pick which one you like better. Together, we'll determine the most beloved songs in the singer-songwriter's holiday catalog.</p>
 			</div>
-		</div>
-		<div class="message message--holiday">
-			<p>Feeling That Creepy Christmas Feeling? Cast your votes in the <a href="christmas/">Sufjan Christmas Showdown</a>!</p>
 		</div>
 		<?php if (!empty($_POST) || $randomSongs == null) { ?>
 			<div class="message">
@@ -240,6 +237,6 @@
 
 			</div>
 		</form>
-		<?php include "includes/footer.html"; ?>
+		<?php include "../includes/footer.html"; ?>
 	</body>
 </html>
