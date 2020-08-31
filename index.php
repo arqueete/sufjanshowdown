@@ -102,7 +102,7 @@
         <meta http-equiv="x-ua-compatible" content="ie=edge">
         <meta name="description" content="Vote to help determine the most-loved Sufjan Stevens songs.">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-		<link rel="canonical" href="http://www.sufjanshowdown.com" />
+		<link rel="canonical" href="https://www.sufjanshowdown.com" />
 		<link href='https://fonts.googleapis.com/css?family=Roboto:900' rel='stylesheet' type='text/css'>
 		<link rel="stylesheet" href="normalize.css" />
 		<link rel="stylesheet" href="styles.css" />
@@ -115,9 +115,6 @@
 				<span class="subtitle">(Or, Consider a New Way of Voting On Favorite Songs!)</span>
 				<p>We'll show you two songs by indie artist Sufjan Stevens. You pick which one you like better. Together, we'll determine the most beloved songs in the singer-songwriter's catalog.</p>
 			</div>
-		</div>
-		<div class="message message--holiday">
-			<p>Feeling That Creepy Christmas Feeling? Cast your votes in the <a href="christmas/">Sufjan Christmas Showdown</a>!</p>
 		</div>
 		<?php if (!empty($_POST) || $randomSongs == null) { ?>
 			<div class="message">
@@ -165,9 +162,9 @@
 						<div class="game__embed">
 						<?php
 							if ($left['url'] && $leftAlbumInfo['url']) {
-								echo "<iframe style='border: 0; width: 100%; height: 42px;' src='http://bandcamp.com/EmbeddedPlayer/album=". $leftAlbumInfo['url'] ."/size=small/bgcol=ffffff/linkcol=333333/track=" . $left['url'] . "/transparent=true/' seamless><a href='". $leftAlbumInfo['bandcamp'] ."'>" . $left['title'] . "by Sufjan Stevens</a></iframe>"; 
+								echo "<iframe style='border: 0; width: 100%; height: 42px;' src='https://bandcamp.com/EmbeddedPlayer/album=". $leftAlbumInfo['url'] ."/size=small/bgcol=ffffff/linkcol=333333/track=" . $left['url'] . "/transparent=true/' seamless><a href='". $leftAlbumInfo['bandcamp'] ."'>" . $left['title'] . "by Sufjan Stevens</a></iframe>"; 
 							} else if ($left['url'] && $leftAlbumInfo['url'] == 0) {
-								echo "<iframe style='border: 0; width: 100%; height: 42px;' src='http://bandcamp.com/EmbeddedPlayer/track=". $left['url'] ."/size=small/bgcol=ffffff/linkcol=333333/transparent=true/' seamless><a href='". $leftAlbumInfo['bandcamp'] ."'>" . $left['title'] . "by Sufjan Stevens</a></iframe>";
+								echo "<iframe style='border: 0; width: 100%; height: 42px;' src='https://bandcamp.com/EmbeddedPlayer/track=". $left['url'] ."/size=small/bgcol=ffffff/linkcol=333333/transparent=true/' seamless><a href='". $leftAlbumInfo['bandcamp'] ."'>" . $left['title'] . "by Sufjan Stevens</a></iframe>";
 							} else {
 								echo "Song embed not available.";
 							};
@@ -209,9 +206,9 @@
 						<div class="game__embed">
 						<?php
 							if ($right['url'] && $rightAlbumInfo['url']) {
-								echo "<iframe style='border: 0; width: 100%; height: 42px;' src='http://bandcamp.com/EmbeddedPlayer/album=". $rightAlbumInfo['url'] ."/size=small/bgcol=ffffff/linkcol=333333/track=" . $right['url'] . "/transparent=true/' seamless><a href='". $rightAlbumInfo['bandcamp'] ."'>" . $right['title'] . "by Sufjan Stevens</a></iframe>"; 
+								echo "<iframe style='border: 0; width: 100%; height: 42px;' src='https://bandcamp.com/EmbeddedPlayer/album=". $rightAlbumInfo['url'] ."/size=small/bgcol=ffffff/linkcol=333333/track=" . $right['url'] . "/transparent=true/' seamless><a href='". $rightAlbumInfo['bandcamp'] ."'>" . $right['title'] . "by Sufjan Stevens</a></iframe>"; 
 							} else if ($right['url'] && $rightAlbumInfo['url'] == 0) {
-								echo "<iframe style='border: 0; width: 100%; height: 42px;' src='http://bandcamp.com/EmbeddedPlayer/track=". $right['url'] ."/size=small/bgcol=ffffff/linkcol=333333/transparent=true/' seamless><a href='". $rightAlbumInfo['bandcamp'] ."'>" . $right['title'] . "by Sufjan Stevens</a></iframe>";
+								echo "<iframe style='border: 0; width: 100%; height: 42px;' src='https://bandcamp.com/EmbeddedPlayer/track=". $right['url'] ."/size=small/bgcol=ffffff/linkcol=333333/transparent=true/' seamless><a href='". $rightAlbumInfo['bandcamp'] ."'>" . $right['title'] . "by Sufjan Stevens</a></iframe>";
 							} else {
 								echo "Song embed not available.";
 							};
