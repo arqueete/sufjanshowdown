@@ -102,7 +102,7 @@
         <meta http-equiv="x-ua-compatible" content="ie=edge">
         <meta name="description" content="Vote to help determine the most-loved Sufjan Stevens songs.">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-		<link rel="canonical" href="https://www.sufjanshowdown.com" />
+		<link rel="canonical" href="https://www.jessicagleason.com/sufjanshowdown/" />
 		<link href='https://fonts.googleapis.com/css?family=Roboto:900' rel='stylesheet' type='text/css'>
 		<link rel="stylesheet" href="normalize.css" />
 		<link rel="stylesheet" href="styles.css" />
